@@ -1,5 +1,7 @@
 package com.uneatlantico.uneapp
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
@@ -8,6 +10,8 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.widget.Toast
+import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.activity_inicio.*
 
 
@@ -28,6 +32,9 @@ class InicioActivity : AppCompatActivity() {
 
         openFragment(inicioFragment)
 
+        //https://github.com/journeyapps/zxing-android-embedded
+        //
+
         //https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
         toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -43,13 +50,14 @@ class InicioActivity : AppCompatActivity() {
     }
 
     private fun setupDrawerContent(navigationView: NavigationView) {
-        navigationView.setNavigationItemSelectedListener(
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            selectDrawerItem(menuItem)
+            true
+        }
+    }
 
-                    fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-                        selectDrawerItem(menuItem)
-                        return true
-                    }
-                )
+    private fun selectDrawerItem(menuItem: MenuItem) {
+
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {
@@ -80,6 +88,43 @@ class InicioActivity : AppCompatActivity() {
         }
         false
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        try {
+
+
+            val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+            if (result !== null) {
+                if (resultCode == Activity.RESULT_OK) {
+                    if (result.contents == null) {
+                        Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG).show()
+                    }
+                }
+            } else {
+                super.onActivityResult(requestCode, resultCode, data)
+                /*val getMainScreen = Intent(this, InicioActivity::class.java)//pentru test, de sters
+            startActivity(getMainScreen)*/
+            }
+        }
+        catch (x: Exception){
+            val getMainScreen = Intent(this, InicioActivity::class.java)//pentru test, de sters
+            startActivity(getMainScreen)
+        }
+    }
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            if (result.contents == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG).show()
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }*/
 
     /**
      * ABRE UN NUEVO FRAGMENTO ENCIMA DEL ANTERIOR

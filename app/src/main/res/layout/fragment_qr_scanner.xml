@@ -7,7 +7,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        >
 
         <TextView android:text=""
             android:layout_width="wrap_content"
@@ -16,7 +18,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Process"
+            android:text="Scan"
             android:id="@+id/button"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
