@@ -18,6 +18,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.uneatlantico.uneapp.Inicio.InicioActivity;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
@@ -54,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .build();
 
         signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(2);
+        signInButton.setSize(1);
         signInButton.setOnClickListener(this);
 
         signOutButton = findViewById(R.id.signOutButton);
@@ -113,6 +114,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void startNewActivity(GoogleSignInAccount acct){
         Intent i = new Intent(this, InicioActivity.class);
+        i.putExtra("account", acct);
         finish();  //Kill the activity from which you will go to next activity
         startActivity(i);
     }

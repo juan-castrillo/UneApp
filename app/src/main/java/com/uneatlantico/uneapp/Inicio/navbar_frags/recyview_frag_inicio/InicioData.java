@@ -1,4 +1,6 @@
-package com.uneatlantico.uneapp;
+package com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio;
+
+import com.uneatlantico.uneapp.R;
 
 /**
  * Created by Juan CG on 25/03/2018.

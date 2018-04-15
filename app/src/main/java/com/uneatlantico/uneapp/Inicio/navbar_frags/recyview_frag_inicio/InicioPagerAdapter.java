@@ -1,9 +1,14 @@
-package com.uneatlantico.uneapp;
+package com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.uneatlantico.uneapp.Inicio.navbar_frags.CampusFragment;
+import com.uneatlantico.uneapp.Inicio.navbar_frags.HorarioFragment;
+import com.uneatlantico.uneapp.Inicio.navbar_frags.InicioFragment;
+import com.uneatlantico.uneapp.Inicio.navbar_frags.QrScannerFragment;
 
 /**
  * Created by Juan CG on 26/03/2018.

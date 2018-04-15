@@ -1,4 +1,4 @@
-package com.uneatlantico.uneapp;
+package com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.uneatlantico.uneapp.R;
 
 /**
  * Created by Juan CG on 25/03/2018.

@@ -1,4 +1,4 @@
-package com.uneatlantico.uneapp
+package com.uneatlantico.uneapp.Inicio.navbar_frags
 
 
 import android.os.Bundle
@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio.InicioAdapter
+import com.uneatlantico.uneapp.R
 
 
 /**
@@ -23,6 +25,7 @@ class InicioFragment : Fragment() {
     fun newInstance(): Fragment {
         return InicioFragment()
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_inicio, container, false)
         var recyclerView = view!!.findViewById<RecyclerView>(R.id.recyclerView)

@@ -1,47 +1,67 @@
-package com.uneatlantico.uneapp
+package com.uneatlantico.uneapp.Inicio
 
-import android.app.Activity
-import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import android.widget.Toast
-import com.google.zxing.integration.android.IntentIntegrator
+import com.uneatlantico.uneapp.BottomNavigationViewComplements
+import com.uneatlantico.uneapp.Inicio.ham_frags.ExtraFragment
+import com.uneatlantico.uneapp.Inicio.ham_frags.NotasFragment
+import com.uneatlantico.uneapp.Inicio.ham_frags.RegistroAsistenciaFragment
+import com.uneatlantico.uneapp.Inicio.navbar_frags.CampusFragment
+import com.uneatlantico.uneapp.Inicio.navbar_frags.HorarioFragment
+import com.uneatlantico.uneapp.Inicio.navbar_frags.InicioFragment
+import com.uneatlantico.uneapp.Inicio.navbar_frags.QrScannerFragment
+import com.uneatlantico.uneapp.R
 import kotlinx.android.synthetic.main.activity_inicio.*
 
 
 class InicioActivity : AppCompatActivity() {
-    //var fragment: Fragment? = null
+
+    //fragmentos para la barra de navegacion inferior
     private var inicioFragment = InicioFragment.newInstance()
     private var campusFragment = CampusFragment.newInstance()
     private var qrScannerFragment = QrScannerFragment.newInstance()
     private var horarioFragment = HorarioFragment.newInstance()
     private val fm = supportFragmentManager
+
+    //variables para el menu hamburguesa lateral
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var nvDrawer: NavigationView
     private lateinit var toolbar: Toolbar
-
+    private lateinit var drawerToggle: ActionBarDrawerToggle
+    /**
+     *
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio)
-
+        val account: Bundle = intent.extras
+        if(account != null) {
+            val accountation = account.get("account")
+        }
         openFragment(inicioFragment)
 
         //https://github.com/journeyapps/zxing-android-embedded
-        //
 
-        //https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
+        //TODO implementar menu hamburguesa --> https://github.com/mikepenz/MaterialDrawer
+        //Ya implementada completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
         toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-
         nvDrawer = findViewById<NavigationView>(R.id.nvView)
         setupDrawerContent(nvDrawer)
+        drawerToggle = setupDrawerToggle()
+
+        // Tie DrawerLayout events to the ActionBarToggle
+        mDrawerLayout.addDrawerListener(drawerToggle);
+
 
         //All sobre la barra de navegacion inferior
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation)
@@ -49,6 +69,34 @@ class InicioActivity : AppCompatActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
+    private fun setupDrawerToggle(): ActionBarDrawerToggle {
+        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
+        // and will not render the hamburger icon without it.
+        return ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Pass any configuration change to the drawer toggles
+        drawerToggle.onConfigurationChanged(newConfig)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(drawerToggle.onOptionsItemSelected(item))
+                return true
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    /**
+     *
+     */
     private fun setupDrawerContent(navigationView: NavigationView) {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             selectDrawerItem(menuItem)
@@ -56,10 +104,30 @@ class InicioActivity : AppCompatActivity() {
         }
     }
 
-    private fun selectDrawerItem(menuItem: MenuItem) {
+    /**
+     * cambiar entre fragmentos mediante el menu de hamburguesa
+     */
+    fun selectDrawerItem(menuItem: MenuItem) {
+        // Create a new fragment and specify the fragment to show based on nav item clicked
 
+        when (menuItem.itemId) {
+            R.id.ham_notas -> openFragment(NotasFragment.newInstance())
+            R.id.ham_registro_asistencias -> openFragment(RegistroAsistenciaFragment.newInstance())
+            R.id.ham_extra -> openFragment(ExtraFragment.newInstance())
+            else -> openFragment(NotasFragment.newInstance())
+        }
+
+        // Highlight the selected item has been done by NavigationView
+        menuItem.isChecked = true
+        // Set action bar title
+        title = menuItem.title
+        // Close the navigation drawer
+        mDrawerLayout.closeDrawers()
     }
 
+    /**
+     *  cambiar entre fragmentos mediante la barra de navegacion inferior
+     */
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener {
         item ->
         when (item.itemId) {
@@ -88,43 +156,9 @@ class InicioActivity : AppCompatActivity() {
         }
         false
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        try {
 
 
-            val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
 
-            if (result !== null) {
-                if (resultCode == Activity.RESULT_OK) {
-                    if (result.contents == null) {
-                        Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG).show()
-                    }
-                }
-            } else {
-                super.onActivityResult(requestCode, resultCode, data)
-                /*val getMainScreen = Intent(this, InicioActivity::class.java)//pentru test, de sters
-            startActivity(getMainScreen)*/
-            }
-        }
-        catch (x: Exception){
-            val getMainScreen = Intent(this, InicioActivity::class.java)//pentru test, de sters
-            startActivity(getMainScreen)
-        }
-    }
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null) {
-            if (result.contents == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(this, "Scanned: " + result.contents, Toast.LENGTH_LONG).show()
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }*/
 
     /**
      * ABRE UN NUEVO FRAGMENTO ENCIMA DEL ANTERIOR
@@ -138,6 +172,7 @@ class InicioActivity : AppCompatActivity() {
 
         transaction.commit()
     }
+
     private fun hideAllFragments(){
         val transaction2 = fm.beginTransaction()
         transaction2.hide(inicioFragment)
@@ -147,27 +182,4 @@ class InicioActivity : AppCompatActivity() {
         transaction2.commit()
     }
 
-    /**
-     * estaba en oncreate xd
-     */
-    /*fragment = fm.findFragmentByTag("inicioFragment")
-
-        if (fragment == null) {
-            val ft = fm.beginTransaction()
-            fragment = InicioFragment()
-            ft.add(android.R.id.content, fragment, "inicioFragment")
-            ft.commit()
-
-        }*/
-    /*val viewPager = findViewById<ViewPager>(R.id.viewpager)
-
-    // Create an adapter that knows which fragment should be shown on each page
-    val adapter = InicioPagerAdapter(this, supportFragmentManager)
-
-    // Set the adapter onto the view pager
-    viewPager.adapter = adapter
-
-    // Give the TabLayout the ViewPager
-    val tabLayout = findViewById<TabLayout>(R.id.sliding_tabs)
-    tabLayout.setupWithViewPager(viewPager)*/
 }

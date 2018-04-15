@@ -1,4 +1,4 @@
-package com.uneatlantico.uneapp
+package com.uneatlantico.uneapp.Inicio.navbar_frags
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.uneatlantico.uneapp.R
 
 
 /**
@@ -19,19 +20,18 @@ class CampusFragment : Fragment() {
             //inflater.inflate(R.layout.fragment_campus, container, false)
     var mWebView: WebView? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-            val v = inflater!!.inflate(R.layout.fragment_campus, container, false)
-            mWebView = v.findViewById<WebView>(R.id.webview) as WebView
-            mWebView!!.loadUrl("https://www.uneatlantico.es/alumnos/uneatlantico-virtual")
+        val v = inflater!!.inflate(R.layout.fragment_campus, container, false)
+        mWebView = v.findViewById<WebView>(R.id.webview) as WebView
+        mWebView!!.loadUrl("https://www.uneatlantico.es/alumnos/uneatlantico-virtual")
 
-            // Enable Javascript
-            val webSettings = mWebView!!.getSettings()
-            webSettings.setJavaScriptEnabled(true)
+        // Enable Javascript
+        val webSettings = mWebView!!.getSettings()
+        webSettings.setJavaScriptEnabled(true)
 
-            // Force links and redirects to open in the WebView instead of in a browser
-            mWebView!!.setWebViewClient(WebViewClient())
+        // Force links and redirects to open in the WebView instead of in a browser
+        mWebView!!.setWebViewClient(WebViewClient())
 
 
         return v

@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
-
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    android:background="@color/colorPrimaryDark">
+    android:elevation="8dp"
+    app:theme="@style/ThemeOverlay.AppCompat.Light"
+    android:background="@color/colorPrimary"
+    >
 </android.support.v7.widget.Toolbar>
