@@ -36,19 +36,20 @@ class InicioActivity : AppCompatActivity() {
     private lateinit var nvDrawer: NavigationView
     private lateinit var toolbar: Toolbar
     private lateinit var drawerToggle: ActionBarDrawerToggle
+
     /**
-     *
+     * 
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio)
-        val account: Bundle = intent.extras
+        /*val account: Bundle = intent.extras
         if(account != null) {
             val accountation = account.get("account")
-        }
-        openFragment(inicioFragment)
+        }*/
 
-        //https://github.com/journeyapps/zxing-android-embedded
+        //Inicio la actividad con el fragmento inicio
+        openFragment(inicioFragment)
 
         //TODO implementar menu hamburguesa --> https://github.com/mikepenz/MaterialDrawer
         //Ya implementada completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
@@ -58,8 +59,6 @@ class InicioActivity : AppCompatActivity() {
         nvDrawer = findViewById<NavigationView>(R.id.nvView)
         setupDrawerContent(nvDrawer)
         drawerToggle = setupDrawerToggle()
-
-        // Tie DrawerLayout events to the ActionBarToggle
         mDrawerLayout.addDrawerListener(drawerToggle);
 
 
@@ -92,7 +91,6 @@ class InicioActivity : AppCompatActivity() {
                 return true
         return super.onOptionsItemSelected(item)
     }
-
 
     /**
      *
@@ -157,19 +155,13 @@ class InicioActivity : AppCompatActivity() {
         false
     }
 
-
-
-
     /**
      * ABRE UN NUEVO FRAGMENTO ENCIMA DEL ANTERIOR
      */
     private fun openFragment(fragment: Fragment) {
         val transaction = fm.beginTransaction()
-        //hideAllFragments()
         transaction.replace(R.id.container, fragment)
-
         transaction.addToBackStack(null)
-
         transaction.commit()
     }
 
