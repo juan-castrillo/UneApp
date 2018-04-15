@@ -22,38 +22,32 @@ import com.uneatlantico.uneapp.R
  * create an instance of this fragment.
  */
 class QrScannerFragment : Fragment(), View.OnClickListener {
-
+    val mibonitoFragmento: QrScannerFragment = this
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        //IntentIntegrator.forSupportFragment(this).setPrompt("Scan a barcode or QRCode").initiateScan()
-        val button = inflater.inflate(R.layout.fragment_qr_scanner, container, false).findViewById(R.id.button) as Button
-        button.setOnClickListener(this)
-        return inflater.inflate(R.layout.fragment_qr_scanner, container, false)
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val integrator = IntentIntegrator.forSupportFragment(this)
-
-        integrator.setPrompt(" ")
-
-
-        integrator.setCameraId(0)  // Use a specific camera of the device
-        integrator.initiateScan()
+        val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
+        val b: Button = v.findViewById(R.id.button) as Button
+        b.setOnClickListener(this)
+        return v
     }
 
     override fun onClick(v: View) {
-        IntentIntegrator.forSupportFragment(this).setPrompt("Scan a barcode or QRCode").initiateScan()
-        /*val integrator = IntentIntegrator.forSupportFragment(this)
+        when(v.id) {
+            R.id.button -> {
+                Toast.makeText(this.context, "has pulsado mi boton", Toast.LENGTH_SHORT)
+                val integrator = IntentIntegrator.forSupportFragment(this)
+                integrator.setPrompt(" ")
+                integrator.setCameraId(0)  // Use a specific camera of the device
+                integrator.initiateScan()
+            }
+            else ->Toast.makeText(this.context, "has pulsado algo raro", Toast.LENGTH_SHORT)
+        }
 
-        integrator.setPrompt(" ")
 
-
-        integrator.setCameraId(0)  // Use a specific camera of the device
-        integrator.initiateScan()*/
     }
     /**
      * Devuelve el resultado del escaneo de qr
      */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result !== null) {
             if (resultCode == Activity.RESULT_OK) {
@@ -65,29 +59,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         }
         else
             super.onActivityResult(requestCode, resultCode, data)
-            /*val getMainScreen = Intent(this, InicioActivity::class.java)//pentru test, de sters
-        startActivity(getMainScreen)*/
-
     }
-        /*catch (x: Exception){
-            val getMainScreen = Intent(this.context, InicioActivity::class.java)//pentru test, de sters
-            startActivity(getMainScreen)
-        }*/
-
-
-
-        /*btn.setOnClickListener(View.OnClickListener{
-            val integrator = IntentIntegrator.forSupportFragment(this)
-
-            integrator.setPrompt(" ")
-
-
-            integrator.setCameraId(0)  // Use a specific camera of the device
-            integrator.initiateScan()
-        })*/
-
-
-
 
     companion object {
         fun newInstance(): QrScannerFragment = QrScannerFragment()
