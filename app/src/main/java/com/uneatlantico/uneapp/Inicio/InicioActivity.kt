@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
 import com.uneatlantico.uneapp.BottomNavigationViewComplements
 import com.uneatlantico.uneapp.Inicio.ham_frags.ExtraFragment
 import com.uneatlantico.uneapp.Inicio.ham_frags.NotasFragment
@@ -20,6 +21,18 @@ import com.uneatlantico.uneapp.Inicio.navbar_frags.InicioFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.QrScannerFragment
 import com.uneatlantico.uneapp.R
 import kotlinx.android.synthetic.main.activity_inicio.*
+import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
+import com.mikepenz.materialdrawer.Drawer
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.DividerDrawerItem
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
+
+
+
+
+
+
 
 
 class InicioActivity : AppCompatActivity() {
@@ -60,7 +73,6 @@ class InicioActivity : AppCompatActivity() {
         setupDrawerContent(nvDrawer)
         drawerToggle = setupDrawerToggle()
         mDrawerLayout.addDrawerListener(drawerToggle);
-
 
         //All sobre la barra de navegacion inferior
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation)
