@@ -33,9 +33,9 @@
             <!--where fragments go-->
             <FrameLayout
                 android:id="@+id/container"
-                android:layout_below="@id/navigation"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:background="@android:color/white"
                 />
@@ -45,12 +45,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:itemBackground = "@color/colorPrimaryDark"
                 app:menu="@menu/navigation"
                 />
 
+
         </LinearLayout>
+
 
         <!-- The navigation drawer that comes from the left -->
         <!-- Note that `android:layout_gravity` needs to be set to 'start' -->

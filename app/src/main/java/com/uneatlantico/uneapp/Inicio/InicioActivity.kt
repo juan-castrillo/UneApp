@@ -1,6 +1,5 @@
 package com.uneatlantico.uneapp.Inicio
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -206,9 +205,9 @@ class InicioActivity : AppCompatActivity() {
         transaction2.commit()
     }
 
-    private fun mensaje(msg: String) {
+    private fun mensaje(msg: String= "no especificado", ttl:String="titulo generico" ) {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage(msg).setTitle("Advertencia Debug")
+        builder.setMessage(msg).setTitle(ttl)
         val dialog = builder.create()
         dialog.show()
     }
