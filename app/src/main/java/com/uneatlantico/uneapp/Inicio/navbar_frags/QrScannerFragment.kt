@@ -11,6 +11,8 @@ import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
 import com.uneatlantico.uneapp.R
+import com.uneatlantico.uneapp.db.RegistrosDataBase
+import org.jetbrains.anko.db.insert
 
 
 /**
@@ -30,6 +32,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         return v
     }
 
+    //TODO comprobar si el usuario está en la red de la universidad antes de permitir abrir el scanner
     override fun onClick(v: View) {
         when(v.id) {
             R.id.button -> {
@@ -53,12 +56,53 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             if (resultCode == Activity.RESULT_OK) {
                 if (result.contents == null)
                     Toast.makeText(this.context, "Cancelled", Toast.LENGTH_LONG).show()
-                else
+                else {
                     Toast.makeText(this.context, "Scanned: " + result.contents, Toast.LENGTH_LONG).show()
+                    handleQrResult(result.contents)
+                }
             }
         }
         else
             super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    /**
+     * Formateo el resultado de la lectura de qr
+     * Compruebo si el formato es el adecuado
+     */
+    private fun handleQrResult(qrContents: String) {
+        lateinit var idEvento: String
+        lateinit var fecha: String
+        try {
+            val partes: List<String> = qrContents.split('_')
+            val iteratorPartes = partes.iterator()
+            while (iteratorPartes.hasNext()) {
+                idEvento = iteratorPartes.next()
+                fecha = iteratorPartes.next()
+            }
+        }
+        catch (z: Exception){
+            Toast.makeText(this.context, "no compatible", Toast.LENGTH_SHORT)//TODO hacer algo cuando el qr no cumpla los parámetros adecuados
+        }
+
+        insertarRegistroQr(idEvento, fecha)
+    }
+
+    /**
+     * Inserto los datos del qr en base de datos
+     */
+    private fun insertarRegistroQr(idEvento: String, fecha: String) {
+        val db = RegistrosDataBase(this.context)
+        try {
+            db.use{
+                insert(
+                    "Registros", "idEvento" to idEvento, "fecha" to fecha
+                )
+            }
+        }
+        catch (xc: Exception){
+            Toast.makeText(this.context, "no insertado", Toast.LENGTH_SHORT)
+        }
     }
 
     companion object {
