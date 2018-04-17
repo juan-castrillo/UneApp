@@ -1,5 +1,7 @@
 package com.uneatlantico.uneapp.Inicio
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -7,35 +9,36 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.squareup.picasso.Picasso
 import com.uneatlantico.uneapp.BottomNavigationViewComplements
-import com.uneatlantico.uneapp.Inicio.ham_frags.ExtraFragment
-import com.uneatlantico.uneapp.Inicio.ham_frags.NotasFragment
-import com.uneatlantico.uneapp.Inicio.ham_frags.RegistroAsistenciaFragment
+import com.uneatlantico.uneapp.Inicio.ham_frags.ExtraActivity
+import com.uneatlantico.uneapp.Inicio.ham_frags.NotasActivity
+import com.uneatlantico.uneapp.Inicio.ham_frags.RegistroAsistenciaActivity
+import com.uneatlantico.uneapp.Inicio.ham_frags.SettingsActivity
 import com.uneatlantico.uneapp.Inicio.navbar_frags.CampusFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.HorarioFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.InicioFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.QrScannerFragment
 import com.uneatlantico.uneapp.R
 import kotlinx.android.synthetic.main.activity_inicio.*
-import com.mikepenz.materialdrawer.DrawerBuilder
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
-import com.mikepenz.materialdrawer.Drawer
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
-import com.mikepenz.materialdrawer.model.DividerDrawerItem
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
-
-
-
-
-
-
-
+import kotlin.reflect.KClass
 
 class InicioActivity : AppCompatActivity() {
+
+    //Cuenta de google
+    private lateinit var googleAccount: GoogleSignInAccount
+    private lateinit var mName: TextView
+    private lateinit var mImage: ImageView
+    private lateinit var mMail: TextView
+    private lateinit var headerView: View
 
     //fragmentos para la barra de navegacion inferior
     private var inicioFragment = InicioFragment.newInstance()
@@ -50,29 +53,29 @@ class InicioActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
+
     /**
-     * 
+     *
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio)
-        /*val account: Bundle = intent.extras
-        if(account != null) {
-            val accountation = account.get("account")
-        }*/
+        googleAccount = intent.extras.getParcelable("account")
 
-        //Inicio la actividad con el fragmento inicio
         openFragment(inicioFragment)
 
-        //TODO implementar menu hamburguesa --> https://github.com/mikepenz/MaterialDrawer
         //Ya implementada completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
         toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         nvDrawer = findViewById<NavigationView>(R.id.nvView)
         setupDrawerContent(nvDrawer)
+
+        headerView = nvDrawer.getHeaderView(0)
+
+        headerData()
         drawerToggle = setupDrawerToggle()
-        mDrawerLayout.addDrawerListener(drawerToggle);
+        mDrawerLayout.addDrawerListener(drawerToggle)
 
         //All sobre la barra de navegacion inferior
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation)
@@ -80,11 +83,19 @@ class InicioActivity : AppCompatActivity() {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-    private fun setupDrawerToggle(): ActionBarDrawerToggle {
-        // NOTE: Make sure you pass in a valid toolbar reference.  ActionBarDrawToggle() does not require it
-        // and will not render the hamburger icon without it.
-        return ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
+    private fun headerData() {
+        mName = headerView .findViewById(R.id.headerUserName)
+        mName.text = googleAccount.displayName
+
+        mMail = headerView .findViewById(R.id.headerUserEmail)
+        mMail.text = googleAccount.email
+
+        mImage = headerView .findViewById(R.id.headerUserImage)
+        Picasso.with(this).load(googleAccount.photoUrl.toString()).into(mImage)
     }
+
+    private fun setupDrawerToggle(): ActionBarDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
+
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -119,20 +130,29 @@ class InicioActivity : AppCompatActivity() {
      */
     fun selectDrawerItem(menuItem: MenuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
-
+        var hamActivitie: KClass<*>
         when (menuItem.itemId) {
-            R.id.ham_notas -> openFragment(NotasFragment.newInstance())
-            R.id.ham_registro_asistencias -> openFragment(RegistroAsistenciaFragment.newInstance())
-            R.id.ham_extra -> openFragment(ExtraFragment.newInstance())
-            else -> openFragment(NotasFragment.newInstance())
+            R.id.ham_notas -> hamActivitie = NotasActivity::class//openFragment(NotasFragment.newInstance())
+            R.id.ham_registro_asistencias -> hamActivitie = RegistroAsistenciaActivity::class //openFragment(RegistroAsistenciaFragment.newInstance())
+            R.id.ham_extra -> hamActivitie =ExtraActivity::class //openFragment(ExtraFragment.newInstance())
+            R.id.ham_settings ->hamActivitie =SettingsActivity::class //openFragment(SettingsFragment.newInstance())
+            else -> hamActivitie = SettingsActivity::class //openFragment(NotasFragment.newInstance())
         }
 
         // Highlight the selected item has been done by NavigationView
         menuItem.isChecked = true
         // Set action bar title
-        title = menuItem.title
+        //title = menuItem.title
         // Close the navigation drawer
         mDrawerLayout.closeDrawers()
+        ham_Launch(hamActivitie, menuItem.title.toString())
+    }
+
+    private fun ham_Launch(ina: KClass<*>, ham_option_title:String) {
+        val i = Intent(this, ina.java)
+        i.putExtra("title", ham_option_title)
+        //finish()  //Kill the activity from which you will go to next activity
+        startActivityForResult(i, 0)
     }
 
     /**
@@ -184,6 +204,13 @@ class InicioActivity : AppCompatActivity() {
         transaction2.hide(qrScannerFragment)
         transaction2.hide(horarioFragment)
         transaction2.commit()
+    }
+
+    private fun mensaje(msg: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(msg).setTitle("Advertencia Debug")
+        val dialog = builder.create()
+        dialog.show()
     }
 
 }

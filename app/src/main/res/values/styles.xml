@@ -9,4 +9,14 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="ham_Theme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/negro</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:textColor">@color/negro</item>
+
+    </style>
+
 </resources>

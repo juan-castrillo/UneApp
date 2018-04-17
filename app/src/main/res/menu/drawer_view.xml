@@ -5,14 +5,18 @@
         <item
             android:id="@+id/ham_notas"
             android:icon="@drawable/settings"
-            android:title="First" />
+            android:title="Notas" />
         <item
             android:id="@+id/ham_registro_asistencias"
             android:icon="@drawable/settings"
-            android:title="Second" />
+            android:title="Registro de Asistencia" />
         <item
             android:id="@+id/ham_extra"
             android:icon="@drawable/settings"
-            android:title="Third" />
+            android:title="Extra" />
+        <item
+            android:id="@+id/ham_settings"
+            android:icon="@drawable/settings"
+            android:title="Ajustes" />
     </group>
 </menu>

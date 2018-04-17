@@ -22,7 +22,7 @@ class CampusFragment : Fragment() {
 
      override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val v = inflater!!.inflate(R.layout.fragment_campus, container, false)
+        val v = inflater.inflate(R.layout.fragment_campus, container, false)
         mWebView = v.findViewById<WebView>(R.id.webview) as WebView
         mWebView!!.loadUrl("https://www.uneatlantico.es/alumnos/uneatlantico-virtual")
 

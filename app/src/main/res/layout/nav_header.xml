@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.uneatlantico.uneapp.Inicio.InicioActivity"
     android:layout_width="match_parent"
     android:layout_height="192dp"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/material_header_background"
     android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
-    android:gravity="bottom"
-    >
+    android:gravity="bottom">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp"
-        android:src="@android:drawable/sym_def_app_icon" />
+    <android.support.v7.widget.CardView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        app:cardCornerRadius="40dp"
+        android:innerRadius="0dp"
+        android:shape="ring"
+        android:background="@color/zxing_transparent"
+        android:thicknessRatio="1.9">
+        <ImageView
+            android:id="@+id/headerUserImage"
+            android:layout_gravity="center"
+            android:padding="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:paddingBottom="8dp"
+            android:src="@android:drawable/sym_def_app_icon"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            >
+        </ImageView>
+    </android.support.v7.widget.CardView>
 
     <TextView
+        android:id="@+id/headerUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Android Studio"
         android:textColor="@color/negro"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/headerUserEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text=""
         android:textColor="@color/negro"
-
-        android:text="android.studio@android.com" />
+        />
 
 </LinearLayout>
