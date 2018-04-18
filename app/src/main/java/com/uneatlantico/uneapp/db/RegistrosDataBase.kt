@@ -26,13 +26,13 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
     override fun onCreate(db: SQLiteDatabase) {
         db.createTable(
                 "Registros", true,
-                "id" to INTEGER + PRIMARY_KEY + UNIQUE + AUTOINCREMENT,
+                "id" to INTEGER + PRIMARY_KEY + UNIQUE,
                 "idEvento" to TEXT,
                 "fecha" to TEXT
         )
         db.createTable(
                 "Eventos", true,
-                "idMateria" to INTEGER + PRIMARY_KEY + UNIQUE + AUTOINCREMENT,
+                "idMateria" to INTEGER + PRIMARY_KEY + UNIQUE,
                 "nombreEvento" to TEXT,
                 "grupo" to TEXT,
                 "nombreProfesor" to TEXT
@@ -42,6 +42,13 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.dropTable("Registros", true)
     }
+
+    /*class RegistroDb(val registrosDataBase: RegistrosDataBase.instance,
+                     val dataMapper:DbDataMapper = DbDataMapper(){
+                         fun requestRegistro() = registrosDataBase.use {
+                             select("Registros")
+                         }        }
+                   )*/
 }
 
 val Context.database: RegistrosDataBase get() = RegistrosDataBase.getInstance(applicationContext)

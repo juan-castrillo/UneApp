@@ -96,7 +96,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
             GoogleSignInAccount acct = result.getSignInAccount();
-            startNewActivity(acct);
+            String[] partesMail = acct.getEmail().split("@", -1);
+            if(partesMail[1].equals("alumnos.uneatlantico.es"))
+                startNewActivity(acct);
+            else
+                mensaje("Utilice su correo de la Universidad del Atlantico");
         }
         else ;
     }

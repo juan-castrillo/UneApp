@@ -1,6 +1,7 @@
 package com.uneatlantico.uneapp.Inicio.navbar_frags
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,6 +14,9 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.RegistrosDataBase
 import org.jetbrains.anko.db.insert
+import android.net.wifi.WifiManager
+import android.support.v7.app.AlertDialog
+import android.net.wifi.SupplicantState
 
 
 /**
@@ -27,8 +31,10 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     val mibonitoFragmento: QrScannerFragment = this
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
+        checkWifiUneat()
         val b: Button = v.findViewById(R.id.button) as Button
         b.setOnClickListener(this)
+
         return v
     }
 
@@ -37,16 +43,48 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         when(v.id) {
             R.id.button -> {
                 Toast.makeText(this.context, "has pulsado mi boton", Toast.LENGTH_SHORT)
-                val integrator = IntentIntegrator.forSupportFragment(this)
-                integrator.setPrompt(" ")
-                integrator.setCameraId(0)  // Use a specific camera of the device
-                integrator.initiateScan()
+                checkWifiUneat()
             }
             else ->Toast.makeText(this.context, "has pulsado algo raro", Toast.LENGTH_SHORT)
         }
 
 
     }
+
+    //TODO pedir peticiones de localizacion
+    fun checkWifiUneat(){
+        try {
+            var wifiSSID:String
+            val wifiManager = activity.getSystemService(Context.WIFI_SERVICE)as WifiManager
+            val wifiInfo = wifiManager.connectionInfo
+            if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
+                wifiSSID = wifiInfo.ssid
+            }
+            else
+                wifiSSID = "No hay conexion"
+
+            var redCorrecta = false
+            when (wifiSSID) { //TODO eliminar "AndroidWifi" cuando salga a release
+                "\"wuneat-becarios\"", "\"wuneat-alum\"", "\"wifiuneat-publica\"", "\"wifiuneat-pas\"", "\"AndroidWifi\"" -> redCorrecta = true
+            }
+
+            if (redCorrecta)
+                initiateQrScanner()
+            else
+                mensaje("Debes estar conectado a la red de la universidad, usted está conectado a ${wifiSSID}", "Alerta Escaner QR")
+        }
+        catch (e: Exception){
+            mensaje("Debes estar conectado a la red de la universidad", "Alerta Escaner QR")
+        }
+    }
+
+    fun initiateQrScanner(){
+        val integrator = IntentIntegrator.forSupportFragment(this)
+        integrator.setPrompt(" ")
+        integrator.setCameraId(0)  // Use a specific camera of the device
+        integrator.initiateScan()
+    }
+
     /**
      * Devuelve el resultado del escaneo de qr
      */
@@ -80,12 +118,15 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
                 idEvento = iteratorPartes.next()
                 fecha = iteratorPartes.next()
             }
+            mensaje(idEvento + " y " + fecha)
+            insertarRegistroQr(idEvento, fecha)
         }
         catch (z: Exception){
             Toast.makeText(this.context, "no compatible", Toast.LENGTH_SHORT)//TODO hacer algo cuando el qr no cumpla los parámetros adecuados
+            mensaje("no compatible")
         }
 
-        insertarRegistroQr(idEvento, fecha)
+
     }
 
     /**
@@ -107,5 +148,12 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
     companion object {
         fun newInstance(): QrScannerFragment = QrScannerFragment()
+    }
+
+    private fun mensaje(msg: String= "no especificado", ttl:String="titulo generico" ) {
+        val builder = AlertDialog.Builder(this.context)
+        builder.setMessage(msg).setTitle(ttl)
+        val dialog = builder.create()
+        dialog.show()
     }
 }// Required empty public constructor
