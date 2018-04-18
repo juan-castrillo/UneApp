@@ -25,6 +25,7 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
     }
 
     //TODO chequear los nombres de campos de las tablas y si estan correctas
+    //TODO cambiar el campo "idEvento" a Int
     override fun onCreate(db: SQLiteDatabase) {
         db.createTable(
                 "Registros", true,

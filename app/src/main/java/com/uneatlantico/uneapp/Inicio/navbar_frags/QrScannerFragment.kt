@@ -43,7 +43,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             }
         }
 
-        //checkWifiUneat()
+        checkWifiUneat()
         val b: Button = v.findViewById(R.id.button) as Button
         b.setOnClickListener(this)
 
@@ -55,8 +55,8 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         when(v.id) {
             R.id.button -> {
                 Toast.makeText(this.context, "has pulsado mi boton", Toast.LENGTH_SHORT)
-                insertarRegistroQr(1, "hello")
-                //checkWifiUneat()
+                //insertarRegistroQr(1, "hello")
+                checkWifiUneat()
             }
             else ->Toast.makeText(this.context, "has pulsado algo raro", Toast.LENGTH_SHORT)
         }
