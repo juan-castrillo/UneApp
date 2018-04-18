@@ -1,54 +1,62 @@
 package com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg
 
+import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.uneatlantico.uneapp.R
+import com.uneatlantico.uneapp.db.Registro
 
-class RegistroAsistenciaAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-lateinit var r:RegistroAsistenciaData
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.small_card_layout, parent, false)
-        r = RegistroAsistenciaData()
-        return ListViewHolder(view)
+
+/**
+ * https://stackoverflow.com/questions/44714815/populate-sqlite-data-to-recyclerview-list
+ */
+class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter.RegViewHolder> {
+    private val mlec: List<Registro>
+
+    constructor(mlec: List<Registro>) {
+        this.mlec = mlec
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ListViewHolder).bindView(position)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.small_card_layout, parent, false)
+        return RegViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: RegViewHolder, position: Int) {
+        holder.textViewLecTime.text = mlec[position].idEvento.toString()
+        holder.textViewSub.text = mlec[position].fecha
     }
 
     override fun getItemCount(): Int {
-        //return RegistroAsistenciaActivity().idEvento.size
-        //return r.idEvento.size
-        return r.idEvento.size
+        Log.d("nothing", mlec.size.toString())
+        return mlec.size
     }
 
-    //TODO descomentar mItemImage para el estado (cuando se cree el campo aprovado en la base de datos)
-    private inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        private val mItemText: TextView
-        //private val mItemImage: ImageView
-        private val mItemText2: TextView
+    class RegViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        var textViewSub: AppCompatTextView
+        var textViewLecTime: AppCompatTextView
 
         init {
-            mItemText = itemView.findViewById<View>(R.id.eventoTextView) as TextView
-            //mItemImage = itemView.findViewById<View>(R.id.stateImage) as ImageView
-            mItemText2 = itemView.findViewById<View>(R.id.fechaTextView) as TextView
-            itemView.setOnClickListener(this)
+            //emptyView = (TextView) itemView.findViewById(R.id.emptyView);
+            textViewSub = itemView.findViewById(R.id.eventoTextView) as AppCompatTextView
+            textViewLecTime = itemView.findViewById(R.id.fechaTextView) as AppCompatTextView
         }
-
-        fun bindView(posicion: Int) {
-           mItemText.text = r.idEvento[posicion].toString()
-            //mItemImage.setImageResource(RegistroAsistenciaData.[posicion])
-            mItemText2.text = r.fecha[posicion]
-        }
-
-        override fun onClick(view: View) {
-
-        }
-
-        //"@+id/thumbnail"
-        //"@+id/title"
     }
+    /*class RegViewHolder: RecyclerView.ViewHolder() {
+
+        private val textViewSub: TextView
+        private val textViewLecTime: TextView
+
+        constructor(val itemView: View) {
+            super(itemView)
+            //emptyView = (TextView) itemView.findViewById(R.id.emptyView);
+            textViewSub = itemView.findViewById(R.id.eventoTextView) as TextView
+            textViewLecTime = itemView.findViewById(R.id.fechaTextView) as TextView
+        }
+    }*/
 }

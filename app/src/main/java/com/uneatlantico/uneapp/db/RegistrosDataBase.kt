@@ -67,7 +67,7 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
 
             if (cursor.moveToFirst()) {
                 while (cursor.isAfterLast == false) {
-                    idEvento = cursor.getString(cursor.getColumnIndex("")) as Long
+                    idEvento = cursor.getString(cursor.getColumnIndex("idEvento")).toLong()
                     fecha = cursor.getString(cursor.getColumnIndex("fecha"))
                     registros.add(Registro(idEvento, fecha))
                     cursor.moveToNext()

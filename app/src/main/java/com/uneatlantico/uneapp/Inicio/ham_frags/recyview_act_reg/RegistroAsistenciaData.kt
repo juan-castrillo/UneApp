@@ -1,11 +1,7 @@
 package com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg
 
-import com.uneatlantico.uneapp.Inicio.ham_frags.RegistroAsistenciaActivity
-import com.uneatlantico.uneapp.db.Registro
-import com.uneatlantico.uneapp.db.RegistrosDataBase
-
 class RegistroAsistenciaData {
-    //companion object {
+   /* //companion object {
 
     var db: kotlin.collections.ArrayList<Registro>
     lateinit var idEvento: Array<Long>
@@ -52,5 +48,5 @@ class RegistroAsistenciaData {
 
 
         var fecha = arrayOf("Uno", "dos", "tres", "cuatro", "cinco")
-    //}*/
+    //}*/*/
 }
