@@ -1,10 +1,17 @@
 package com.uneatlantico.uneapp.Inicio.navbar_frags
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.wifi.SupplicantState
+import android.net.wifi.WifiManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +21,6 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.RegistrosDataBase
 import org.jetbrains.anko.db.insert
-import android.net.wifi.WifiManager
-import android.support.v7.app.AlertDialog
-import android.net.wifi.SupplicantState
 
 
 /**
@@ -31,7 +35,15 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     val mibonitoFragmento: QrScannerFragment = this
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
-        checkWifiUneat()
+
+        if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity, Manifest.permission.ACCESS_COARSE_LOCATION)) { }
+            else {
+                ActivityCompat.requestPermissions(this.activity, Array(2){ Manifest.permission.ACCESS_COARSE_LOCATION }, 1)
+            }
+        }
+
+        //checkWifiUneat()
         val b: Button = v.findViewById(R.id.button) as Button
         b.setOnClickListener(this)
 
@@ -43,7 +55,8 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         when(v.id) {
             R.id.button -> {
                 Toast.makeText(this.context, "has pulsado mi boton", Toast.LENGTH_SHORT)
-                checkWifiUneat()
+                insertarRegistroQr(1, "hello")
+                //checkWifiUneat()
             }
             else ->Toast.makeText(this.context, "has pulsado algo raro", Toast.LENGTH_SHORT)
         }
@@ -65,7 +78,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
             var redCorrecta = false
             when (wifiSSID) { //TODO eliminar "AndroidWifi" cuando salga a release
-                "\"wuneat-becarios\"", "\"wuneat-alum\"", "\"wifiuneat-publica\"", "\"wifiuneat-pas\"", "\"AndroidWifi\"" -> redCorrecta = true
+                "\"wuneat-becarios\"", "\"wuneat-alum\"", "\"wifiuneat-publica\"", "\"wifiuneat-pas\"", "\"AndroidWifi\"", "\"si\"" -> redCorrecta = true
             }
 
             if (redCorrecta)
@@ -119,7 +132,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
                 fecha = iteratorPartes.next()
             }
             mensaje(idEvento + " y " + fecha)
-            insertarRegistroQr(idEvento, fecha)
+            insertarRegistroQr(idEvento as Long, fecha)
         }
         catch (z: Exception){
             Toast.makeText(this.context, "no compatible", Toast.LENGTH_SHORT)//TODO hacer algo cuando el qr no cumpla los parámetros adecuados
@@ -132,7 +145,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     /**
      * Inserto los datos del qr en base de datos
      */
-    private fun insertarRegistroQr(idEvento: String, fecha: String) {
+    private fun insertarRegistroQr(idEvento: Long, fecha: String) {
         val db = RegistrosDataBase(this.context)
         try {
             db.use{
