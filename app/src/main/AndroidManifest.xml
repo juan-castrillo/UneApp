@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name=".Inicio.InicioActivity"
-            android:screenOrientation="portrait" />
+            />
         <activity android:name=".Inicio.ham_frags.ExtraActivity"
             android:theme="@style/ham_Theme"
             />

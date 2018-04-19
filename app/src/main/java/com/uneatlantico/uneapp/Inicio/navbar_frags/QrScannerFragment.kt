@@ -33,9 +33,12 @@ import org.jetbrains.anko.db.insert
  */
 class QrScannerFragment : Fragment(), View.OnClickListener {
     val mibonitoFragmento: QrScannerFragment = this
+    var formato:ArrayList<String> = ArrayList<String>()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
+        formato.add("BarcodeFormat.QR_CODE")
 
+        //ask for location permision
         if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity, Manifest.permission.ACCESS_COARSE_LOCATION)) { }
             else {
@@ -92,10 +95,12 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     }
 
     fun initiateQrScanner(){
+
         val integrator = IntentIntegrator.forSupportFragment(this)
         integrator.setPrompt(" ")
-        integrator.setCameraId(0)  // Use a specific camera of the device
-        integrator.initiateScan()
+        integrator.setCameraId(0)
+        integrator.setOrientationLocked(false)// Use a specific camera of the device
+        integrator.initiateScan(formato)
     }
 
     /**
@@ -131,11 +136,15 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
                 idEvento = iteratorPartes.next()
                 fecha = iteratorPartes.next()
             }
-            mensaje(idEvento + " y " + fecha)
-            insertarRegistroQr(idEvento as Long, fecha)
+            //mensaje(idEvento + " y " + fecha)
+
+                mensaje("Recibido", "QR respuesta")
+
+
+            insertarRegistroQr(idEvento.toLong(), fecha)
         }
         catch (z: Exception){
-            Toast.makeText(this.context, "no compatible", Toast.LENGTH_SHORT)//TODO hacer algo cuando el qr no cumpla los parámetros adecuados
+            //Toast.makeText(this.context, "no compatible", Toast.LENGTH_SHORT)//TODO hacer algo cuando el qr no cumpla los parámetros adecuados
             mensaje("no compatible")
         }
 
