@@ -80,11 +80,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
+
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-            result = null;
 
         }
     }
@@ -97,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startNewActivity(acct);
             else
                 mensaje("Utilice su correo de la Universidad del Atlantico");
-                partesMail = null;
+
         }
         else ;
     }

@@ -1,7 +1,22 @@
 package com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg
 
+import com.uneatlantico.uneapp.db.UneAppDB
+import com.orm.SugarRecord.findById
+
+
+/**
+ * https://www.quora.com/What-are-the-best-ways-to-implement-an-SQLite-database-in-Android
+ */
 class RegistroAsistenciaData {
-   /* //companion object {
+   //object hola{
+       fun hello(){
+       //algoquevoyaborrar.(1, "fol")
+   }
+
+       var alge = UneAppDB(1,"holle")
+
+   //}
+       /* //companion object {
 
     var db: kotlin.collections.ArrayList<Registro>
     lateinit var idEvento: Array<Long>
