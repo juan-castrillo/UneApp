@@ -78,11 +78,35 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
                 }
             }
         }
+        catch (x: Exception) { }
+        return registros
+    }
+    fun estadoUltimo(idEvento: Int):Int{
+        var idEventoTemp: Int = 0
+        val db = writableDatabase
+        lateinit var cursor: Cursor
+
+        try {
+            cursor = db.rawQuery("select estado from Registros WHERE idEvento = $idEvento ORDER BY id DESC LIMIT 1", null)
+        }
+        catch (e: Exception) {
+        }
+        try {
+            var idEvento:String
+            var fecha: String
+
+            if (cursor.moveToFirst()) {
+                while (cursor.isAfterLast == false) {
+                    idEventoTemp = cursor.getString(cursor.getColumnIndex("estado")).toInt()
+                    cursor.moveToNext()
+                }
+            }
+        }
         catch (x: Exception) {
 
         }
 
-        return registros
+        return idEventoTemp
     }
 
     val Context.database: RegistrosDataBase

@@ -42,7 +42,7 @@ class InicioActivity : AppCompatActivity() {
     //fragmentos para la barra de navegacion inferior
     private var inicioFragment = InicioFragment.newInstance()
     private var campusFragment = CampusFragment.newInstance()
-    private var qrScannerFragment = QrScannerFragment.newInstance()
+    private var qrScannerFragment = QrScannerFragment()
     private var horarioFragment = HorarioFragment.newInstance()
     private val fm = supportFragmentManager
 
