@@ -14,7 +14,7 @@ import org.jetbrains.anko.db.*
  */
 class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppDatabase", null, 1){
     companion object {
-        private var instance: RegistrosDataBase? = null
+        var instance: RegistrosDataBase? = null
 
         @Synchronized
         fun getInstance(ctx: Context): RegistrosDataBase {
@@ -30,8 +30,10 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
         db.createTable(
                 "Registros", true,
                 "id" to INTEGER + PRIMARY_KEY + UNIQUE,
-                "idEvento" to TEXT,
-                "fecha" to TEXT
+                "idEvento" to INTEGER,
+                "fecha" to TEXT,
+                "enviado" to INTEGER,
+                "estado" to INTEGER
         )
         db.createTable(
                 "Eventos", true,
@@ -52,13 +54,14 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
                              select("Registros")
                          }        }
                    )*/
+    //TODO mover esto de sitio y cambiar el diseño de query
     fun recogerAllRegistros(): ArrayList<Registro> {
         val registros = ArrayList<Registro>()
         val db = writableDatabase
         lateinit var cursor: Cursor
 
         try {
-            cursor = db.rawQuery("select * from " + "Registros", null)
+            cursor = db.rawQuery("select * from Registros", null)
         }
         catch (e: Exception) {
         }
@@ -70,7 +73,7 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
                 while (cursor.isAfterLast == false) {
                     idEvento = cursor.getString(cursor.getColumnIndex("idEvento")).toLong()
                     fecha = cursor.getString(cursor.getColumnIndex("fecha"))
-                    registros.add(Registro(idEvento, fecha))
+                    registros.add(Registro(idEvento, fecha, 1, 1))
                     cursor.moveToNext()
                 }
             }
@@ -82,6 +85,7 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
         return registros
     }
 
-    val Context.database: RegistrosDataBase get() = RegistrosDataBase.getInstance(applicationContext)
+    val Context.database: RegistrosDataBase
+        get() = RegistrosDataBase.getInstance(applicationContext)
 }
 

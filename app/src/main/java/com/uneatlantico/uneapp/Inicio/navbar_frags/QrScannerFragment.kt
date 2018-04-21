@@ -18,9 +18,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import com.google.zxing.integration.android.IntentIntegrator
+import com.uneatlantico.uneapp.Inicio.navbar_frags.extra_frag_qrscanner.PostSend
 import com.uneatlantico.uneapp.R
-import com.uneatlantico.uneapp.db.RegistrosDataBase
-import org.jetbrains.anko.db.insert
 
 
 /**
@@ -32,8 +31,9 @@ import org.jetbrains.anko.db.insert
  * create an instance of this fragment.
  */
 class QrScannerFragment : Fragment(), View.OnClickListener {
-    val mibonitoFragmento: QrScannerFragment = this
-    var formato:ArrayList<String> = ArrayList<String>()
+
+    private var formato:ArrayList<String> = ArrayList<String>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
         formato.add("BarcodeFormat.QR_CODE")
@@ -73,7 +73,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             var wifiSSID:String
             val wifiManager = activity.getSystemService(Context.WIFI_SERVICE)as WifiManager
             val wifiInfo = wifiManager.connectionInfo
-            if (wifiInfo.getSupplicantState() == SupplicantState.COMPLETED) {
+            if (wifiInfo.supplicantState == SupplicantState.COMPLETED) {
                 wifiSSID = wifiInfo.ssid
             }
             else
@@ -136,12 +136,13 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
                 idEvento = iteratorPartes.next()
                 fecha = iteratorPartes.next()
             }
+            val listaQR: List<String> = listOf(idEvento, fecha)
             //mensaje(idEvento + " y " + fecha)
 
                 mensaje("Recibido", "QR respuesta")
 
-
-            insertarRegistroQr(idEvento.toLong(), fecha)
+            insertarRegistroQr(listaQR)
+            //insertarRegistroQr(idEvento.toLong(), fecha)
         }
         catch (z: Exception){
             //Toast.makeText(this.context, "no compatible", Toast.LENGTH_SHORT)//TODO hacer algo cuando el qr no cumpla los parámetros adecuados
@@ -151,10 +152,14 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
     }
 
+    private fun insertarRegistroQr(listaQR:List<String>){
+        PostSend(listaQR, this.context)
+    }
     /**
+     * DEPRECATED
      * Inserto los datos del qr en base de datos
      */
-    private fun insertarRegistroQr(idEvento: Long, fecha: String) {
+    /*private fun insertarRegistroQr(idEvento: Long, fecha: String) {
         val db = RegistrosDataBase(this.context)
         try {
             db.use{
@@ -166,7 +171,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         catch (xc: Exception){
             Toast.makeText(this.context, "no insertado", Toast.LENGTH_SHORT)
         }
-    }
+    }*/
 
     companion object {
         fun newInstance(): QrScannerFragment = QrScannerFragment()
