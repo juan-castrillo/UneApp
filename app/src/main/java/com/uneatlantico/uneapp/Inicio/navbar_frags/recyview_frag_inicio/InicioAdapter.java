@@ -1,5 +1,6 @@
 package com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,7 @@ public class InicioAdapter extends RecyclerView.Adapter{
 
         public void bindView(int posicion){
             mItemText.setText(InicioData.titulo[posicion]);
-            mItemImage.setImageResource(InicioData.picturePath[posicion]);
+            mItemImage.setImageURI(Uri.parse(InicioData.pictureUris[posicion]));//setImageResource(InicioData.picturePath[posicion]);
             mItemText2.setText(InicioData.resumenArticulo[posicion]);
         }
         public void onClick(View view){

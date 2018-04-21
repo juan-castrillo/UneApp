@@ -3,6 +3,7 @@ package com.uneatlantico.uneapp.Inicio
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -15,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.squareup.picasso.Picasso
 import com.uneatlantico.uneapp.BottomNavigationViewComplements
@@ -29,6 +31,7 @@ import com.uneatlantico.uneapp.Inicio.navbar_frags.QrScannerFragment
 import com.uneatlantico.uneapp.R
 import kotlinx.android.synthetic.main.activity_inicio.*
 import kotlin.reflect.KClass
+
 
 class InicioActivity : AppCompatActivity() {
 
@@ -53,6 +56,9 @@ class InicioActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
+    //variables doble pulsacion para salir
+    private var doubleBackToExitPressedOnce = false
+    private val mHandler = Handler()
 
     /**
      *
@@ -163,7 +169,7 @@ class InicioActivity : AppCompatActivity() {
         when (item.itemId) {
 
             R.id.navigation_home -> {
-                inicioFragment = InicioFragment.newInstance()
+                //val inicioFragment = InicioFragment.newInstance()
                 openFragment(inicioFragment)
                 return@OnNavigationItemSelectedListener true
             }
@@ -174,12 +180,12 @@ class InicioActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_qr -> {
-                qrScannerFragment = QrScannerFragment.newInstance()
+                //qrScannerFragment = QrScannerFragment.newInstance()
                 openFragment(qrScannerFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_horario -> {
-                horarioFragment = HorarioFragment.newInstance()
+                //horarioFragment = HorarioFragment.newInstance()
                 openFragment(horarioFragment)
                 return@OnNavigationItemSelectedListener true
             }
@@ -191,10 +197,10 @@ class InicioActivity : AppCompatActivity() {
      * ABRE UN NUEVO FRAGMENTO ENCIMA DEL ANTERIOR
      */
     private fun openFragment(fragment: Fragment) {
-        val transaction = fm.beginTransaction()
-        transaction.replace(R.id.container, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
+        fm.beginTransaction()
+                .replace(R.id.container, fragment)
+                //.addToBackStack(null)
+                .commit()
     }
 
     private fun hideAllFragments(){
@@ -204,6 +210,29 @@ class InicioActivity : AppCompatActivity() {
         transaction2.hide(qrScannerFragment)
         transaction2.hide(horarioFragment)
         transaction2.commit()
+    }
+
+    /**
+     * Preguntar al usuario si desea salir que pulse de nuevo al boton ATRAS
+     */
+    public override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Presionar atrás de nuevo para salir", Toast.LENGTH_SHORT).show()
+
+        mHandler.postDelayed(mRunnable, 2000)
+    }
+
+    private val mRunnable = Runnable { doubleBackToExitPressedOnce = false }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mHandler.removeCallbacks(mRunnable)
     }
 
     private fun mensaje(msg: String= "no especificado", ttl:String="titulo generico" ) {

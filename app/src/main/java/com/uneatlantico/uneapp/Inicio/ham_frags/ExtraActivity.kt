@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.uneatlantico.uneapp.R
 
+/**
+ * https://github.com/akexorcist/Android-RoundCornerProgressBar
+ */
 class ExtraActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

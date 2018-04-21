@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio.InicioAdapter
 import com.uneatlantico.uneapp.R
 
-
+//https://github.com/kikoso/Swipeable-Cards
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the

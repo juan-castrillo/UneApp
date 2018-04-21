@@ -63,8 +63,8 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         when(v.id) {
             R.id.button -> {
                 Log.d("boton escaneo", "has pulsado mi boton")
-                val tempInsert = listOf("1", "10/20/2018/12:34:34")
-                Log.d("boton escaneo", tempInsert.toString())
+                //val tempInsert = listOf("1", "10/20/2018/12:34:34")
+                //Log.d("boton escaneo", tempInsert.toString())
                 //insertarRegistroQr(tempInsert)
                 //handleQrResult("1_20/04/2018/13:42:12")
                 checkWifiUneat()
