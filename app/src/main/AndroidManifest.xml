@@ -19,7 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon"
-        android:name="com.orm.SugarApp"
 
         >
         <meta-data android:name="DATABASE" android:value="UneApp.db" />

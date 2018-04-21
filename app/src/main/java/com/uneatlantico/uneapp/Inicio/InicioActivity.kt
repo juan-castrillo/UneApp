@@ -39,6 +39,7 @@ class InicioActivity : AppCompatActivity() {
     private lateinit var mMail: TextView
     private lateinit var headerView: View
 
+    //TODO eliminar estas variables
     //fragmentos para la barra de navegacion inferior
     private var inicioFragment = InicioFragment.newInstance()
     private var campusFragment = CampusFragment.newInstance()

@@ -3,6 +3,7 @@ package com.uneatlantico.uneapp.db
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import org.jetbrains.anko.db.*
 
 /**
@@ -37,11 +38,12 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
         )
         db.createTable(
                 "Eventos", true,
-                "idMateria" to INTEGER + PRIMARY_KEY + UNIQUE,
+                "id" to INTEGER + PRIMARY_KEY + UNIQUE,
                 "nombreEvento" to TEXT,
                 "grupo" to TEXT,
                 "nombreProfesor" to TEXT
         )
+        db.rawQuery("CREATE VIEW RegistroAsistenciaView AS SELECT A.time AS Start, B.time AS Stop FROM time A, time B WHERE A.id+1=B.id AND A.bool=1 AND B.bool=0", null)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -54,7 +56,11 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
                              select("Registros")
                          }        }
                    )*/
+
     //TODO mover esto de sitio y cambiar el diseño de query
+    /**
+     * DEPRECATED
+     */
     fun recogerAllRegistros(): ArrayList<Registro> {
         val registros = ArrayList<Registro>()
         val db = writableDatabase
@@ -68,43 +74,46 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
         try {
             var idEvento: Long
             var fecha: String
-
-            if (cursor.moveToFirst()) {
+            if (cursor.moveToFirst())
                 while (cursor.isAfterLast == false) {
                     idEvento = cursor.getString(cursor.getColumnIndex("idEvento")).toLong()
                     fecha = cursor.getString(cursor.getColumnIndex("fecha"))
                     registros.add(Registro(idEvento, fecha, 1, 1))
-                    cursor.moveToNext()
-                }
-            }
+                    cursor.moveToNext() }
         }
         catch (x: Exception) { }
         return registros
     }
+
+    /**
+     * Mostar nombreEvento + fecha
+     */
+   /* fun eventosRegistroAsistencia():ArrayList<String> {
+        var registros:List<String>
+        val db = writableDatabase
+        try {
+            val cursor = db.rawQuery("SELECT nombreEvento from Eventos where id = ")
+        }
+        return registros
+    }*/
+
+    /**
+     * conseguir el ultimo estado para cierta materia
+     */
     fun estadoUltimo(idEvento: Int):Int{
         var idEventoTemp: Int = 0
         val db = writableDatabase
-        lateinit var cursor: Cursor
-
+        //lateinit var cursor: Cursor
         try {
-            cursor = db.rawQuery("select estado from Registros WHERE idEvento = $idEvento ORDER BY id DESC LIMIT 1", null)
-        }
-        catch (e: Exception) {
-        }
-        try {
-            var idEvento:String
-            var fecha: String
+            val cursor = db.rawQuery("select estado from Registros WHERE idEvento = $idEvento ORDER BY id DESC LIMIT 1", null)
 
-            if (cursor.moveToFirst()) {
+            if (cursor.moveToFirst())
                 while (cursor.isAfterLast == false) {
                     idEventoTemp = cursor.getString(cursor.getColumnIndex("estado")).toInt()
-                    cursor.moveToNext()
-                }
-            }
+                    cursor.moveToNext() }
         }
-        catch (x: Exception) {
-
-        }
+        catch (e: Exception) {
+            Log.d("error consiguiendo ultimo registro", e.message)}
 
         return idEventoTemp
     }

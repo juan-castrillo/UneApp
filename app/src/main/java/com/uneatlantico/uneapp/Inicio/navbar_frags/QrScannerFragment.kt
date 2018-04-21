@@ -22,7 +22,9 @@ import com.uneatlantico.uneapp.Inicio.navbar_frags.extra_frag_qrscanner.PostSend
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.RegistrosDataBase
 import org.jetbrains.anko.db.insert
+import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -140,14 +142,16 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         val partes = qrContents.split('_')
 
         try {
+
             var idEvento: String = partes[0]
-            var fecha: String = comprobarFecha(partes[1])
-
-            val listaQR: List<String> = listOf(idEvento, fecha)
-
-            Log.d("listaQR antes de mandar" , listaQR.toString())
-            mensaje("Recibido", "QR respuesta")
-            insertarRegistroQr(listaQR)
+            var fecha: String = partes[1]
+            if(comprobarFecha(fecha)) {
+                val listaQR: List<String> = listOf(idEvento, fecha)
+                Log.d("listaQR antes de mandar", listaQR.toString())
+                mensaje("Recibido", "QR respuesta")
+                insertarRegistroQr(listaQR)
+            }
+            else mensaje("QR expirado", "QR respuesta")
             //insertarRegistroQr(idEvento.toLong(), fecha)
         }
         catch (z: Exception) {
@@ -155,16 +159,31 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             Log.d("excepcionhandleQRresult", z.message)
             mensaje("no compatible")
         }
-
-
     }
 
-    private fun comprobarFecha(fecha: String): String {
-        val tiempoActual:Date = Calendar.getInstance().time;
-        Log.d("tiempoActual", tiempoActual.toString())
-        var algo = fecha.split('/')
-        val hora = algo[3]
-        return fecha
+    private fun comprobarFecha(fechaQR: String): Boolean {
+        var aprovado = false
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy/HH:mm:ss", Locale("es", "ES"))
+        val fechaQRs = dateFormat.parse(fechaQR)
+        val fechaAC = dateFormat.parse(getDateTime())
+        val interval = getDateDiff(fechaQRs, fechaAC, TimeUnit.SECONDS)
+        if(!(interval > 15))
+            aprovado = true
+        //Log.d("tiempoActual", interval.toString())
+        return aprovado
+    }
+
+    fun getDateDiff(date1: Date, date2: Date, timeUnit: TimeUnit): Long {
+        var diffInMillies:Long
+        if(date2.time > date1.time) diffInMillies = date2.time - date1.time
+        else diffInMillies = date1.time - date2.time
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS)
+    }
+
+    private fun getDateTime(): String {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy/HH:mm:ss", Locale("es", "ES"))
+        val date = Date()
+        return dateFormat.format(date)
     }
 
     private fun insertarRegistroQr(listaQR:List<String>){
