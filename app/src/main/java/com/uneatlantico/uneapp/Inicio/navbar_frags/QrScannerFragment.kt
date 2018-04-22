@@ -18,6 +18,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.google.zxing.integration.android.IntentIntegrator
+import com.journeyapps.barcodescanner.CaptureManager
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.uneatlantico.uneapp.Inicio.navbar_frags.extra_frag_qrscanner.PostSend
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.RegistrosDataBase
@@ -38,6 +40,8 @@ import java.util.concurrent.TimeUnit
 class QrScannerFragment : Fragment(), View.OnClickListener {
 
     private var formato:ArrayList<String> = ArrayList<String>()
+    private lateinit var capture: CaptureManager
+    private lateinit var barcodeScannerView: DecoratedBarcodeView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -52,7 +56,6 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         }
         //Log.d("holaaaa", "funcionan los logs")
         checkWifiUneat()
-
         val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
         val b: Button = v.findViewById(R.id.button) as Button
         b.setOnClickListener(this)

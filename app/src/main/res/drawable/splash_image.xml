@@ -7,11 +7,14 @@
     <item android:drawable="@android:color/white"/>
 
     <!-- Your product logo - 144dp color version of your app icon -->
-    <item>
+    <item
+        android:width="144dp"
+        android:height="112.95dp"
+        android:gravity="center"
+        >
 
         <bitmap
-            android:src="@drawable/logouneat_imagen_144"
-            android:gravity="center"/>
+            android:src="@drawable/logouneat_imagen" />
 
     </item>
 

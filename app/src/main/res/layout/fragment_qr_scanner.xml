@@ -1,31 +1,54 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:weightSum="2"
     tools:context=".Inicio.navbar_frags.QrScannerFragment">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
         android:orientation="vertical"
-        android:layout_gravity="center"
-        >
+        android:weightSum="1">
 
-        <TextView android:text=""
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtContent"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Scan"
-            android:id="@+id/button"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imgview"/>
+        <com.journeyapps.barcodescanner.DecoratedBarcodeView
+            android:layout_width="match_parent"
+            android:id="@+id/zxing_barcode_scanner"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="8dp"
+            app:zxing_preview_scaling_strategy="centerCrop"
+            app:zxing_use_texture_view="false" />
     </LinearLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="Scan" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/buttonAwesome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Awesome Button"
+            android:textColor="@android:color/black"
+            app:backgroundTint="@color/colorAccent" />
+
+    </LinearLayout>
+
+</LinearLayout>
