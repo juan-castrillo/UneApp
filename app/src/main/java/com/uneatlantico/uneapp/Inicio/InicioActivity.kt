@@ -71,10 +71,10 @@ class InicioActivity : AppCompatActivity() {
         openFragment(inicioFragment)
 
         //Ya implementada completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
-        toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
-        nvDrawer = findViewById<NavigationView>(R.id.nvView)
+        mDrawerLayout = findViewById(R.id.drawer_layout)
+        nvDrawer = findViewById(R.id.nvView)
         setupDrawerContent(nvDrawer)
 
         headerView = nvDrawer.getHeaderView(0)

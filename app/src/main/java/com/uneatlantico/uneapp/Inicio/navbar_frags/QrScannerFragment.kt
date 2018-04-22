@@ -40,7 +40,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     private var formato:ArrayList<String> = ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
+
         formato.add("BarcodeFormat.QR_CODE")
 
         //ask for location permision
@@ -52,6 +52,8 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         }
         //Log.d("holaaaa", "funcionan los logs")
         checkWifiUneat()
+
+        val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
         val b: Button = v.findViewById(R.id.button) as Button
         b.setOnClickListener(this)
 
