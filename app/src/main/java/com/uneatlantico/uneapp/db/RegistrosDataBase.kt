@@ -100,22 +100,23 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
     /**
      * conseguir el ultimo estado para cierta materia
      */
-    fun estadoUltimo(idEvento: Int):Int{
-        var idEventoTemp: Int = 0
+    fun estadoUltimo(idEvento: Int, fechahoy:String):Int{
+        var estado: Int = 0
         val db = writableDatabase
         //lateinit var cursor: Cursor
         try {
-            val cursor = db.rawQuery("select estado from Registros WHERE idEvento = $idEvento ORDER BY id DESC LIMIT 1", null)
+            val cursor = db.rawQuery("select estado from Registros WHERE idEvento = $idEvento AND fecha LIKE '%$fechahoy%' ORDER BY id DESC LIMIT 1", null)
 
             if (cursor.moveToFirst())
-                while (cursor.isAfterLast == false) {
-                    idEventoTemp = cursor.getString(cursor.getColumnIndex("estado")).toInt()
+                while (!cursor.isAfterLast) {
+                    estado = cursor.getString(cursor.getColumnIndex("estado")).toInt()
                     cursor.moveToNext() }
+            Log.d("estadoultimoDB", estado.toString())
         }
         catch (e: Exception) {
             Log.d("error consiguiendo ultimo registro", e.message)}
 
-        return idEventoTemp
+        return estado
     }
 
     val Context.database: RegistrosDataBase

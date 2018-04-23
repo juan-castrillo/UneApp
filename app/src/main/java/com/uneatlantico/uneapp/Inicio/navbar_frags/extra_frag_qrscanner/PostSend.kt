@@ -7,8 +7,12 @@ import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.doAsync
 import org.json.JSONObject
 import java.io.DataOutputStream
+import java.net.HttpURLConnection
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
+import java.io.OutputStreamWriter
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 
 class PostSend{
@@ -19,13 +23,13 @@ class PostSend{
 
     //cuando viene desde qr Fragment
     fun registrarAlumno(listaQR:List<String>, ct:Context){
-        Log.d("registrar alumno", "entro")
+        Log.d("registraralumno", "entro")
         val miListaTemp:List<String> = initiateList(listaQR, ct)//.toMutableList()
 
         val enviado = sendPostRequest(miListaTemp)
         //saveInDB(miListaTemp, ct, enviado)
         saveInDB(miListaTemp, ct, enviado)
-        Log.d("registrar alumno", miListaTemp.toString())
+        Log.d("registraralumno", miListaTemp.toString())
     }
 
     fun saveInDB(listaInsert: List<String>, ct:Context, enviado:Boolean = false){
@@ -39,7 +43,7 @@ class PostSend{
                             "idEvento" to listaInsert[1].toInt(),
                             "fecha" to listaInsert[2],
                             "enviado" to enviado,
-                            "estado" to listaInsert[3] //estado(ct, listaInsert[0].toInt())
+                            "estado" to estadoDB(listaInsert[3].toInt()) //estado(ct, listaInsert[0].toInt())
                     )
                 }
             }
@@ -51,72 +55,76 @@ class PostSend{
     }
 
     //TODO conseguir el idPersona
-    fun idPersona():Int{
-        return 1
+    fun idPersona():String{
+        return "juan.castrillo"
     }
 
-    /*fun estado(ct:Context, idEvento:Int): Int {
-        var estado = 0
-        doAsync {
-            val db = RegistrosDataBase(ct).writableDatabase
-
-            lateinit var cursor: Cursor
-            try {
-                db.use{
-                    //cursor = rawQuery("SELECT estado FROM Registros WHERE idEvento = ? ORDER BY id DESC LIMIT 1", arrayOf(idEvento.toString()))
-                    cursor = db.rawQuery("select estado from Registros WHERE idEvento = $idEvento ORDER BY id DESC LIMIT 1", null)
-                }
-                if (cursor.moveToFirst())
-                    while (!cursor.isAfterLast) {
-                        when(cursor.getInt(cursor.getColumnIndex("estado"))){
-                            1 -> estado = 0
-                            0 -> estado = 1
-                            else -> estado = 1
-                        }
-                        cursor.moveToNext()
-                    }
-                cursor.close()
+    fun estadoDB(estado:Int): Int {
+        var estadoKul:Int
+        when(estado){
+            1 -> {
+                estadoKul = 0
             }
-            catch (xc: Exception){Log.d("Select estado", xc.message)}
-            /*try {
-
+            0 -> {
+                estadoKul = 1
             }
-            catch (e:Exception){Log.d("Ajustar estado", e.message)}*/
+            else -> {
+                estadoKul = 1
+            }
+        }
+        return estadoKul
+    }
+
+    /*fun estado(ct:Context, idEvento:Int, fecha: String):Int{
+        val db:Int = RegistrosDataBase(ct).estadoUltimo(idEvento, fecha)
+        var estado:Int
+        when(db){
+            1 -> {
+                estado = 0
+            }
+            0 -> {
+                estado = 1
+            }
+            else -> {
+                estado = 1
+            }
         }
         return estado
     }*/
 
-    fun estado(ct:Context, idEvento:Int):Int{
-        val db:Int = RegistrosDataBase(ct).estadoUltimo(idEvento)
-        var estado:Int
-        when(db){
-            1 -> estado = 0
-            0 -> estado = 1
-            else -> estado = 1
-        }
-        return estado
-    }
-
     fun initiateList(listaQR:List<String>, ct:Context):List<String>{
-        var listaInsert:List<String> = listOf<String>(idPersona().toString(), listaQR[0], listaQR[1], estado(ct, listaQR[0].toInt()).toString())
-        /*listaInsert[0] = idPersona().toString() //idPersona
-        listaInsert[1] = listaQR[0] //idEvento
-        listaInsert[2] = listaQR[1] //fecha
-        listaInsert[3] = estado(ct, listaQR[0].toInt()).toString() //espar*/
+        val fecha = formatfecha(listaQR[1])
+        var listaInsert:List<String> = listOf(idPersona(), listaQR[0], fecha, (RegistrosDataBase(ct).estadoUltimo(listaQR[0].toInt(), formatfecha(listaQR[1], false)).toString()))//estado(ct, listaQR[0].toInt(), fecha).toString())
+        //idPersona, idEvento, fecha, valido, validado, tipoRegistro, esPar
         Log.d("listaInsert" , listaInsert.toString())
         return listaInsert
     }
 
+    private fun formatfecha(fechaNoFormat:String, i:Boolean = true):String {
+        var trozosFecha = fechaNoFormat.split('/')
+        var fechaFormat:String
+
+        if(i)
+            fechaFormat = trozosFecha[2] + "-" + trozosFecha[1] + "-" + trozosFecha[0] + " " + trozosFecha[3]
+        else
+            fechaFormat = trozosFecha[2] + "-" + trozosFecha[1] + "-" + trozosFecha[0]
+
+        return fechaFormat
+    }
+
+    //TODO cambiar de http a https
     fun sendPostRequest(postList: List<String>):Boolean {
         var enviado:Boolean = false
         doAsync {
 
             try {
-                val url = URL("https://uneasistencias.uneatlantico.es/registrar")
-                val conn = url.openConnection() as HttpsURLConnection
+                val url = URL("http://uneasistencias.uneatlantico.es/registrar")
+                val conn = url.openConnection() as HttpURLConnection
                 conn.readTimeout = 10000
                 conn.connectTimeout = 15000
                 conn.requestMethod = "POST"
+                conn.setRequestProperty("Content-Type","application/json")
+                conn.setRequestProperty("Accept", "application/json")
                 conn.doInput = true
                 conn.doOutput = true
 
@@ -129,23 +137,28 @@ class PostSend{
                 jsonParam.put("tipoRegistro", "Alumno")
                 jsonParam.put("esPar", postList[3].toBoolean())
 
-                Log.d("JSON", jsonParam.toString())
-                val os = DataOutputStream(conn.outputStream)
-                //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
-                os.writeBytes(jsonParam.toString())
+                val outputStream = conn.outputStream
+                val outputStreamWriter = OutputStreamWriter(outputStream, "UTF-8")
+                outputStreamWriter.write(jsonParam.toString())
+                outputStreamWriter.flush()
+                outputStreamWriter.close()
 
-                os.flush()
-                os.close()
+                val bufferedReader = BufferedReader(InputStreamReader(conn.inputStream, "UTF-8"))
 
-                Log.d("STATUS", (conn.responseCode).toString())
-                Log.d("MSG", conn.responseMessage)
-                if(conn.responseMessage != null)
-                    enviado = true
+                var line: String? = null
+                val sb = StringBuilder()
 
-                conn.disconnect()
+                while ((bufferedReader.readLine()) != null) {
+                    line = bufferedReader.readLine()
+                    sb.append(line)
+                }
+
+                bufferedReader.close()
+                Log.d("Respuestacreo", sb.toString())
+                enviado = true
             }
             catch (e: Exception){
-                Log.d("response Web service", e.message)
+                Log.d("responseWebservice", e.message)
             }
         }
         return enviado

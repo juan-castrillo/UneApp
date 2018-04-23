@@ -49,7 +49,7 @@
             />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
 
         <activity android:name=".Inicio.ham_frags.ExtraActivity"
