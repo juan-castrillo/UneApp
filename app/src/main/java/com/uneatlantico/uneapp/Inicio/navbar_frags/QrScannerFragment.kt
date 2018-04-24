@@ -84,7 +84,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     fun checkWifiUneat(){
         try {
             var wifiSSID:String
-            val wifiManager = activity.getSystemService(Context.WIFI_SERVICE)as WifiManager
+            val wifiManager = activity.applicationContext.getSystemService(Context.WIFI_SERVICE)as WifiManager
             val wifiInfo = wifiManager.connectionInfo
             if (wifiInfo.supplicantState == SupplicantState.COMPLETED) {
                 wifiSSID = wifiInfo.ssid

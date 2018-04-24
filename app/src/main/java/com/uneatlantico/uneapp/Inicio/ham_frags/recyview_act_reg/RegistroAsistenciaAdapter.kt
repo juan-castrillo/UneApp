@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.Registro
 
@@ -27,8 +28,10 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
     }
 
     override fun onBindViewHolder(holder: RegViewHolder, position: Int) {
-        holder.textViewLecTime.text = mlec[position].idEvento.toString()
-        holder.textViewSub.text = mlec[position].fecha
+        holder.textViewFecha.text = mlec[position].idEvento.toString()
+        holder.textViewEvento.text = mlec[position].fecha
+        if(mlec[position].enviado == 1)
+            holder.imageViewEnviado.setImageResource(R.drawable.tick_enviado)
     }
 
     override fun getItemCount(): Int {
@@ -38,13 +41,15 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
 
     class RegViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var textViewSub: AppCompatTextView
-        var textViewLecTime: AppCompatTextView
+        var textViewEvento: AppCompatTextView
+        var textViewFecha: AppCompatTextView
+        var imageViewEnviado: ImageView
 
         init {
             //emptyView = (TextView) itemView.findViewById(R.id.emptyView);
-            textViewSub = itemView.findViewById(R.id.eventoTextView) as AppCompatTextView
-            textViewLecTime = itemView.findViewById(R.id.fechaTextView) as AppCompatTextView
+            textViewEvento = itemView.findViewById(R.id.eventoTextView) as AppCompatTextView
+            textViewFecha = itemView.findViewById(R.id.fechaTextView) as AppCompatTextView
+            imageViewEnviado = itemView.findViewById(R.id.stateImage) as ImageView
         }
     }
     /*class RegViewHolder: RecyclerView.ViewHolder() {

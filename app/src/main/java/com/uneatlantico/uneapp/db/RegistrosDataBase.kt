@@ -39,9 +39,7 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
         db.createTable(
                 "Eventos", true,
                 "id" to INTEGER + PRIMARY_KEY + UNIQUE,
-                "nombreEvento" to TEXT,
-                "grupo" to TEXT,
-                "nombreProfesor" to TEXT
+                "nombreEvento" to TEXT
         )
         db.rawQuery("CREATE VIEW RegistroAsistenciaView AS SELECT A.time AS Start, B.time AS Stop FROM time A, time B WHERE A.id+1=B.id AND A.bool=1 AND B.bool=0", null)
     }
@@ -74,14 +72,19 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
         try {
             var idEvento: Long
             var fecha: String
+            var estado: Int
+            var enviado: Int
             if (cursor.moveToFirst())
                 while (cursor.isAfterLast == false) {
                     idEvento = cursor.getString(cursor.getColumnIndex("idEvento")).toLong()
                     fecha = cursor.getString(cursor.getColumnIndex("fecha"))
-                    registros.add(Registro(idEvento, fecha, 1, 1))
+                    estado = cursor.getInt(cursor.getColumnIndex("estado"))
+                    enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
+                    registros.add(Registro(idEvento, fecha, estado= estado, enviado = enviado))
                     cursor.moveToNext() }
         }
         catch (x: Exception) { }
+        cursor.close()
         return registros
     }
 
