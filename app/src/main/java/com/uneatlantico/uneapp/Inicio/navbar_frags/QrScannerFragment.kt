@@ -20,10 +20,8 @@ import android.widget.Button
 import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
-import com.uneatlantico.uneapp.Inicio.navbar_frags.extra_frag_qrscanner.PostSend
+import com.uneatlantico.uneapp.db.PostSend
 import com.uneatlantico.uneapp.R
-import com.uneatlantico.uneapp.db.RegistrosDataBase
-import org.jetbrains.anko.db.insert
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -198,7 +196,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
      * DEPRECATED
      * Inserto los datos del qr en base de datos
      */
-    private fun insertarRegistroQr(idEvento: Long, fecha: String) {
+    /*private fun insertarRegistroQr(idEvento: Long, fecha: String) {
         val db = RegistrosDataBase(this.context)
         try {
             db.use{
@@ -212,7 +210,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         catch (xc: Exception){
             Log.d("no insertado", xc.message)
         }
-    }
+    }*/
 
     companion object {
         fun newInstance(): QrScannerFragment = QrScannerFragment()

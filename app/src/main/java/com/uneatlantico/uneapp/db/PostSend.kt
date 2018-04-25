@@ -1,21 +1,28 @@
-package com.uneatlantico.uneapp.Inicio.navbar_frags.extra_frag_qrscanner
+package com.uneatlantico.uneapp.db
 
 import android.content.Context
 import android.util.Log
-import com.uneatlantico.uneapp.db.RegistrosDataBase
-import org.jetbrains.anko.db.insert
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.estadoUltimo
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.saveInDB
 import org.jetbrains.anko.doAsync
 import org.json.JSONObject
-import java.io.DataOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import javax.net.ssl.HttpsURLConnection
 import java.io.OutputStreamWriter
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 
 class PostSend{
+
+    /*fun cancer(){
+        val cancer2 = UneAppDB(InicioActivity())
+        val readable = cancer2.readableDatabase
+        val cursor: Cursor = readable.rawQuery("select * from Registros", null)
+        val writable = cancer2.writableDatabase
+        writable.execSQL("")
+    }*/
+
     lateinit var listaPost: List<String>
     constructor(listaD:List<String>, ct:Context){
         registrarAlumno(listaD, ct)
@@ -28,14 +35,18 @@ class PostSend{
 
         val enviado = sendPostRequest(miListaTemp)
         //saveInDB(miListaTemp, ct, enviado)
-        saveInDB(miListaTemp, ct, enviado)
+        val listaEspecificaInsert:List<String> = listOf(miListaTemp[1], miListaTemp[2], enviado.toString(), estadoDB(miListaTemp[3].toInt()).toString())
+        saveInDB(listaEspecificaInsert, ct)
         Log.d("registraralumno", miListaTemp.toString())
     }
 
-    fun saveInDB(listaInsert: List<String>, ct:Context, enviado:Boolean = false){
+    //TODO crear metodo para llamar a UneAppExecuter que inserte (determinar estadoDB)
+    /*fun saveInDB(listaInsert: List<String>, ct:Context, enviado:Boolean = false){
         doAsync {
-            val db = RegistrosDataBase(ct)
-            try {
+            val db = UneAppDB(ct)
+            val writableDB = db.writableDatabase
+            writableDB.execSQL("INSERT INTO Registros (idEvento, fecha, enviado, estado) VALUES ($listaInsert[1], $listaInsert[2], $enviado, ${estadoDB(listaInsert[3].toInt())})")
+            /*val db = RegistrosDataBase(ct)
                 db.use{
                     //TODO preguntar si tengo que pasar el estado actual o el que quiero a que cambie
                     insert(
@@ -45,14 +56,10 @@ class PostSend{
                             "enviado" to enviado,
                             "estado" to estadoDB(listaInsert[3].toInt()) //estado(ct, listaInsert[0].toInt())
                     )
-                }
-            }
-            catch (xc: Exception){
-                Log.d("No insertado", xc.message)
-                //Toast.makeText(this.context, "no insertado", Toast.LENGTH_SHORT)
-            }
+
+            }*/
         }
-    }
+    }*/
 
     //TODO conseguir el idPersona
     fun idPersona():String{
@@ -94,7 +101,7 @@ class PostSend{
 
     fun initiateList(listaQR:List<String>, ct:Context):List<String>{
         val fecha = formatfecha(listaQR[1])
-        var listaInsert:List<String> = listOf(idPersona(), listaQR[0], fecha, (RegistrosDataBase(ct).estadoUltimo(listaQR[0].toInt(), formatfecha(listaQR[1], false)).toString()))//estado(ct, listaQR[0].toInt(), fecha).toString())
+        var listaInsert:List<String> = listOf(idPersona(), listaQR[0], fecha, (estadoUltimo(ct ,listaQR[0].toInt(), formatfecha(listaQR[1], false)).toString()))//estado(ct, listaQR[0].toInt(), fecha).toString())
         //idPersona, idEvento, fecha, valido, validado, tipoRegistro, esPar
         Log.d("listaInsert" , listaInsert.toString())
         return listaInsert
@@ -113,8 +120,8 @@ class PostSend{
     }
 
     //TODO cambiar de http a https
-    fun sendPostRequest(postList: List<String>):Boolean {
-        var enviado:Boolean = false
+    fun sendPostRequest(postList: List<String>):Int {
+        var enviado:Int = 0
         doAsync {
 
             try {
@@ -155,7 +162,7 @@ class PostSend{
 
                 bufferedReader.close()
                 Log.d("Respuestacreo", sb.toString())
-                enviado = true
+                enviado = 1
             }
             catch (e: Exception){
                 Log.d("responseWebservice", e.message)

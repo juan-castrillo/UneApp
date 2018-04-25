@@ -28,16 +28,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:paddingTop="@dimen/album_title_padding"
+                android:paddingLeft="@dimen/card_title_padding"
+                android:paddingRight="@dimen/card_title_padding"
+                android:paddingTop="@dimen/card_title_padding"
                 android:textColor="@color/negro"
-                android:textSize="@dimen/album_title" />
+                android:textSize="@dimen/card_title" />
 
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/album_cover_height"
+                android:layout_height="160dp"
                 android:layout_below="@id/title"
                 android:scaleType="fitXY" />
 
@@ -49,15 +49,15 @@
 
                 android:layout_below="@id/title"
 
-                android:paddingBottom="@dimen/songs_count_padding_bottom"
-                android:paddingLeft="@dimen/album_title_padding"
-                android:paddingRight="@dimen/album_title_padding"
-                android:textSize="@dimen/songs_count" />
+                android:paddingBottom="5dp"
+                android:paddingLeft="@dimen/card_title_padding"
+                android:paddingRight="@dimen/card_title_padding"
+                android:textSize="@dimen/card_extratext" />
 
             <ImageView
                 android:id="@+id/overflow"
-                android:layout_width="@dimen/ic_album_overflow_width"
-                android:layout_height="@dimen/ic_album_overflow_height"
+                android:layout_width="20dp"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/thumbnail"
                 android:layout_marginBottom="6dp"

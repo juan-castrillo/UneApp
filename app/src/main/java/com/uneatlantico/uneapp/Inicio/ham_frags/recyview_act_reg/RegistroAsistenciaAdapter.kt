@@ -1,6 +1,11 @@
 package com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatTextView
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,10 +33,11 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
     }
 
     override fun onBindViewHolder(holder: RegViewHolder, position: Int) {
-        holder.textViewFecha.text = mlec[position].idEvento.toString()
+        holder.textViewFecha.text = mlec[position].Evento
         holder.textViewEvento.text = mlec[position].fecha
         if(mlec[position].enviado == 1)
-            holder.imageViewEnviado.setImageResource(R.drawable.tick_enviado)
+                holder.card.setCardBackgroundColor(Color.GREEN)
+        //holder.imageViewEnviado.setImageResource(R.drawable.tick_enviado)
     }
 
     override fun getItemCount(): Int {
@@ -44,12 +50,13 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
         var textViewEvento: AppCompatTextView
         var textViewFecha: AppCompatTextView
         var imageViewEnviado: ImageView
-
+        var card:CardView
         init {
             //emptyView = (TextView) itemView.findViewById(R.id.emptyView);
             textViewEvento = itemView.findViewById(R.id.eventoTextView) as AppCompatTextView
             textViewFecha = itemView.findViewById(R.id.fechaTextView) as AppCompatTextView
             imageViewEnviado = itemView.findViewById(R.id.stateImage) as ImageView
+            card = itemView.findViewById(R.id.card_view_registro) as CardView
         }
     }
     /*class RegViewHolder: RecyclerView.ViewHolder() {

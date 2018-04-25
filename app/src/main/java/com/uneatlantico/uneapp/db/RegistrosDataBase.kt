@@ -5,6 +5,9 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import org.jetbrains.anko.db.*
+import android.database.sqlite.SQLiteException
+
+
 
 /**
  * https://github.com/Kotlin/anko/wiki/Anko-SQLite
@@ -13,7 +16,12 @@ import org.jetbrains.anko.db.*
  * Registros
  * Eventos
  */
-class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppDatabase", null, 1){
+/*class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppDatabase", null, 1){
+    private val DB_PATH = "data/data/" + "com.uneatlantico.uneapp/databases/"
+
+    private val DB_NAME = "UneAppDatabase"
+    private lateinit var uneAppDataBase: SQLiteDatabase
+
     companion object {
         var instance: RegistrosDataBase? = null
 
@@ -28,6 +36,7 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
     //TODO chequear los nombres de campos de las tablas y si estan correctas
     //TODO cambiar el campo "idEvento" a Int
     override fun onCreate(db: SQLiteDatabase) {
+
         db.createTable(
                 "Registros", true,
                 "id" to INTEGER + PRIMARY_KEY + UNIQUE,
@@ -48,6 +57,9 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
         db.dropTable("Registros", true)
     }
 
+    private fun createTables(db: SQLiteDatabase) {
+
+    }
     /*class RegistroDb(val registrosDataBase: RegistrosDataBase.instance,
                      val dataMapper:DbDataMapper = DbDataMapper(){
                          fun requestRegistro() = registrosDataBase.use {
@@ -60,6 +72,7 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
      * DEPRECATED
      */
     fun recogerAllRegistros(): ArrayList<Registro> {
+        Log.d("rutaDB", DB_PATH)
         val registros = ArrayList<Registro>()
         val db = writableDatabase
         lateinit var cursor: Cursor
@@ -100,6 +113,27 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
         return registros
     }*/
 
+    private fun checkDataBase(): Boolean {
+
+        var checkDB: SQLiteDatabase? = null
+
+        try {
+            val myPath = DB_PATH + DB_NAME
+            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY)
+
+        } catch (e: SQLiteException) {
+            //database does't exist yet.
+        }
+
+        if (checkDB != null) {
+
+            checkDB.close()
+
+        }
+
+        return if (checkDB != null) true else false
+    }
+
     /**
      * conseguir el ultimo estado para cierta materia
      */
@@ -124,5 +158,4 @@ class RegistrosDataBase(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "UneAppData
 
     val Context.database: RegistrosDataBase
         get() = RegistrosDataBase.getInstance(applicationContext)
-}
-
+}*/
