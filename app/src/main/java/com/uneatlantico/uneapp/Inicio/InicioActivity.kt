@@ -12,12 +12,12 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.squareup.picasso.Picasso
 import com.uneatlantico.uneapp.BottomNavigationViewComplements
 import com.uneatlantico.uneapp.Inicio.ham_frags.ExtraActivity
@@ -29,6 +29,7 @@ import com.uneatlantico.uneapp.Inicio.navbar_frags.HorarioFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.InicioFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.QrScannerFragment
 import com.uneatlantico.uneapp.R
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.devolverUsuario
 import kotlinx.android.synthetic.main.activity_inicio.*
 import kotlin.reflect.KClass
 
@@ -36,7 +37,8 @@ import kotlin.reflect.KClass
 class InicioActivity : AppCompatActivity() {
 
     //Cuenta de google
-    private lateinit var googleAccount: GoogleSignInAccount
+    //private lateinit var googleAccount: GoogleSignInAccount
+    private lateinit var googleAccount: List<String>
     private lateinit var mName: TextView
     private lateinit var mImage: ImageView
     private lateinit var mMail: TextView
@@ -66,8 +68,8 @@ class InicioActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inicio)
-        googleAccount = intent.extras.getParcelable("account")
-
+        //googleAccount = intent.extras.getParcelable("account")
+        googleAccount = devolverUsuario(this)
         openFragment(inicioFragment)
 
         //Ya implementada completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
@@ -91,13 +93,19 @@ class InicioActivity : AppCompatActivity() {
 
     private fun headerData() {
         mName = headerView .findViewById(R.id.headerUserName)
-        mName.text = googleAccount.displayName
 
         mMail = headerView .findViewById(R.id.headerUserEmail)
-        mMail.text = googleAccount.email
 
         mImage = headerView .findViewById(R.id.headerUserImage)
-        Picasso.with(this).load(googleAccount.photoUrl.toString()).into(mImage)
+
+        try{
+            mName.text = googleAccount[0]
+            mMail.text = googleAccount[1]
+            Picasso.with(this).load(googleAccount[2]).into(mImage)
+        }
+        catch (e:Exception){
+            Log.d("googleAccountVacio", e.message)
+        }
     }
 
     private fun setupDrawerToggle(): ActionBarDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)

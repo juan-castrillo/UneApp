@@ -3,13 +3,14 @@ package com.uneatlantico.uneapp.db
 import java.util.*
 
 class Registro(var map: MutableMap<String, Any?>) {
-    var _id: Long by map
+    var _id: Int by map
     var Evento: String by map
     var fecha: String by map
     var estado: Int by map
     var enviado: Int by map
 
-    constructor(Evento:String, fecha: String, estado:Int, enviado:Int):this(HashMap()){
+    constructor(id:Int = 1,Evento:String="", fecha:String="", estado:Int=0, enviado:Int=0):this(HashMap()){
+        this._id = id
         this.Evento = Evento
         this.fecha = fecha
         this.estado = estado

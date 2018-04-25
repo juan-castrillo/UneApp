@@ -13,10 +13,10 @@
     <dimen name="card_title_padding">10dp</dimen>
     <dimen name="card_title">15dp</dimen>
     <dimen name="card_extratext">12sp</dimen>
-    <dimen name="songs_count_padding_bottom">5dp</dimen>
+    <dimen name="small_padding">5dp</dimen>
     <dimen name="ic_album_overflow_width">20dp</dimen>
     <dimen name="ic_album_overflow_height">30dp</dimen>
     <dimen name="ic_album_overflow_margin_top">10dp</dimen>
     <dimen name= "textsize_registro_tarjeta_evento">20sp</dimen>
-    <dimen name = "textsize_registro_tarjeta_fecha">14sp</dimen>
+    <dimen name = "textsize_registro_tarjeta_fecha">12sp</dimen>
 </resources>

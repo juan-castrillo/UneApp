@@ -9,8 +9,7 @@ import android.util.Log
 import com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg.RegistroAsistenciaAdapter
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.Registro
-import com.uneatlantico.uneapp.db.UneAppDB
-import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.recogerAllRegistros
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.recogerRegistros
 
 //TODO select a la base de datos sqllite para coger todos los registros y mostrarlos en esta actividad
 class RegistroAsistenciaActivity : AppCompatActivity() {
@@ -20,7 +19,7 @@ class RegistroAsistenciaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro_asistencia)
         //val db:List<Registro> = RegistrosDataBase(this).recogerAllRegistros()
-        val db = recogerAllRegistros(this)
+        val db = recogerRegistros(this)
         getRegistros(db)
         recyclerView = findViewById(R.id.registro_asistencias_recyclerview)
         val layoutManager:RecyclerView.LayoutManager = LinearLayoutManager(this)

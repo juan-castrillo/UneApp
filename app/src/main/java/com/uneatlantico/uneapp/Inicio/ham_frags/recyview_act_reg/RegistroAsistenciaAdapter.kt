@@ -1,9 +1,6 @@
 package com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg
 
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -33,8 +30,8 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
     }
 
     override fun onBindViewHolder(holder: RegViewHolder, position: Int) {
-        holder.textViewFecha.text = mlec[position].Evento
-        holder.textViewEvento.text = mlec[position].fecha
+        holder.textViewFecha.text = mlec[position].fecha
+        holder.textViewEvento.text = mlec[position].Evento
         if(mlec[position].enviado == 1)
                 holder.card.setCardBackgroundColor(Color.GREEN)
         //holder.imageViewEnviado.setImageResource(R.drawable.tick_enviado)
