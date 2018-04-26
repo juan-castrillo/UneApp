@@ -13,15 +13,19 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.ResultPoint
 import com.google.zxing.integration.android.IntentIntegrator
-import com.journeyapps.barcodescanner.CaptureManager
-import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import com.journeyapps.barcodescanner.*
 import com.uneatlantico.uneapp.db.PostSend
 import com.uneatlantico.uneapp.R
+import kotlinx.android.synthetic.main.fragment_qr_scanner.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -40,25 +44,99 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     private var formato:ArrayList<String> = ArrayList<String>()
     private lateinit var capture: CaptureManager
     private lateinit var barcodeScannerView: DecoratedBarcodeView
+    private lateinit var qrResponseImage: ImageView
+    private var lastText: String? = null
+    private lateinit var b: Button
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         formato.add("BarcodeFormat.QR_CODE")
-
+        askPermision()
         //ask for location permision
-        if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        /*if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity, Manifest.permission.ACCESS_COARSE_LOCATION)) { }
             else {
                 ActivityCompat.requestPermissions(this.activity, Array(2){ Manifest.permission.ACCESS_COARSE_LOCATION }, 1)
             }
-        }
+        }*/
+
         //Log.d("holaaaa", "funcionan los logs")
-        checkWifiUneat()
+        //checkWifiUneat()
         val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
-        val b: Button = v.findViewById(R.id.button) as Button
-        b.setOnClickListener(this)
+        init(v)
+
 
         return v
+    }
+
+    /**
+     * permission true -> location
+     * permission false -> camera
+     */
+    private fun askPermision(){
+
+        if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(this.activity, Array(2) { Manifest.permission.ACCESS_COARSE_LOCATION }, 1)
+            }
+        }
+        if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity, Manifest.permission.CAMERA)) {
+            } else {
+                ActivityCompat.requestPermissions(this.activity, Array(2) { Manifest.permission.CAMERA }, 1)
+            }
+        }
+
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        barcodeScannerView.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        barcodeScannerView.pause()
+    }
+
+    /*override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        return barcodeScannerView.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
+    }*/
+
+    private fun init(v: View) {
+        b = v.findViewById(R.id.button) as Button
+        b.setOnClickListener(this)
+
+        qrResponseImage = v.findViewById(R.id.qr_recibido_imagen) as ImageView
+        qrResponseImage.alpha = 0f
+
+        barcodeScannerView = v.findViewById(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
+        barcodeScannerView.setStatusText(" ")
+        val formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
+        barcodeScannerView.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
+        barcodeScannerView.decodeContinuous(callback)
+
+    }
+
+    private val callback = object : BarcodeCallback {
+        override fun barcodeResult(result: BarcodeResult) {
+            if (result.text == null || result.text == lastText) {
+                return
+            }
+
+            lastText = result.text
+            barcodeScannerView.pause()
+            qr_recibido_imagen.alpha = 1f
+            handleQrResult(lastText.toString())
+            barcodeScannerView.visibility = View.GONE
+
+        }
+        override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
     }
 
     //TODO comprobar si el usuario está en la red de la universidad antes de permitir abrir el scanner
@@ -66,11 +144,9 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         when(v.id) {
             R.id.button -> {
                 Log.d("boton escaneo", "has pulsado mi boton")
-                //val tempInsert = listOf("1", "10/20/2018/12:34:34")
-                //Log.d("boton escaneo", tempInsert.toString())
-                //insertarRegistroQr(tempInsert)
-                //handleQrResult("1_20/04/2018/13:42:12")
-                checkWifiUneat()
+                qrResponseImage.alpha = 0f
+                barcodeScannerView.resume()
+                barcodeScannerView.visibility = View.VISIBLE
             }
             else ->Log.d("boton escaneo", "NO has pulsado MI boton")
         }
@@ -78,8 +154,9 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
     }
 
-    //TODO pedir peticiones de localizacion
-    fun checkWifiUneat(){
+    //TODO llamar a este metodo
+    fun checkWifiUneat():Boolean{
+        var redCorrecta = false
         try {
             var wifiSSID:String
             val wifiManager = activity.applicationContext.getSystemService(Context.WIFI_SERVICE)as WifiManager
@@ -90,27 +167,34 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             else
                 wifiSSID = "No hay conexion"
 
-            var redCorrecta = false
+
             when (wifiSSID) { //TODO eliminar "AndroidWifi", "si", "wilkswifi" cuando salga a release
                 "\"wuneat-becarios\"", "\"wuneat-alum\"", "\"wifiuneat-publica\"", "\"wifiuneat-pas\"", "\"AndroidWifi\"",
                 "\"si\"", "\"wilkswifi\"" -> redCorrecta = true
             }
 
             if (redCorrecta)
-                initiateQrScanner()
+                //initiateQrScanner()
             else
                 mensaje("Debes estar conectado a la red de la universidad, usted está conectado a ${wifiSSID}", "Alerta Escaner QR")
         }
         catch (e: Exception){
             mensaje("Debes estar conectado a la red de la universidad", "Alerta Escaner QR")
         }
+        return redCorrecta
     }
 
+    //TODO BORRAR METODO
+    /**
+     * DEPRECATED -----------------
+     */
     fun initiateQrScanner(){
 
         val integrator = IntentIntegrator.forSupportFragment(this)
         integrator.setCameraId(0)
         integrator.setPrompt(" ")
+        //CaptureActivity.
+        integrator.setOrientationLocked(false)
         integrator.setBeepEnabled(false)
         integrator.setBarcodeImageEnabled(true)
         integrator.setOrientationLocked(true)// Use a specific camera of the device
@@ -120,7 +204,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     /**
      * Devuelve el resultado del escaneo de qr
      */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result !== null) {
             if (resultCode == Activity.RESULT_OK) {
@@ -135,7 +219,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         else {
             super.onActivityResult(requestCode, resultCode, data)
         }
-    }
+    }*/
 
     /**
      * Formateo el resultado de la lectura de qr

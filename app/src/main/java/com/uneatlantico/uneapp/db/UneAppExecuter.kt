@@ -107,7 +107,7 @@ class UneAppExecuter{
             //lateinit var cursor: Cursor
             val db = UneAppDB(ct).readableDatabase
             try {
-                val cursor = db.rawQuery("select estado from registros WHERE idEvento = $idEvento AND fecha LIKE '%$fechahoy%' ORDER BY id DESC LIMIT 1", null)
+                val cursor = db.rawQuery("select estado from registros WHERE idEvento = $idEvento AND fecha LIKE '%$fechahoy%' ORDER BY _id DESC LIMIT 1", null)
 
                 if (cursor.moveToFirst())
                     while (!cursor.isAfterLast) {

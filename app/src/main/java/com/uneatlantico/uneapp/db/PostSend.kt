@@ -34,52 +34,30 @@ class PostSend{
 
         val enviado = sendPostRequest(miListaTemp)
 
-        //creo la lista para
+        //creo la lista para Insertar en db
         val listaEspecificaInsert:List<String> = listOf(miListaTemp[1], miListaTemp[2], enviado.toString(), estadoDB(miListaTemp[3].toInt()).toString())
         saveRegistroInDB(listaEspecificaInsert, ct)
+
         Log.d("registraralumno", miListaTemp.toString())
     }
 
-
-    //TODO crear metodo para llamar a UneAppExecuter que inserte (determinar estadoDB)
-    /*fun saveInDB(listaInsert: List<String>, ct:Context, enviado:Boolean = false){
-        doAsync {
-            val db = UneAppDB(ct)
-            val writableDB = db.writableDatabase
-            writableDB.execSQL("INSERT INTO Registros (idEvento, fecha, enviado, estado) VALUES ($listaInsert[1], $listaInsert[2], $enviado, ${estadoDB(listaInsert[3].toInt())})")
-            /*val db = RegistrosDataBase(ct)
-                db.use{
-                    //TODO preguntar si tengo que pasar el estado actual o el que quiero a que cambie
-                    insert(
-                            "Registros",
-                            "idEvento" to listaInsert[1].toInt(),
-                            "fecha" to listaInsert[2],
-                            "enviado" to enviado,
-                            "estado" to estadoDB(listaInsert[3].toInt()) //estado(ct, listaInsert[0].toInt())
-                    )
-
-            }*/
-        }
-    }*/
-
-    //TODO conseguir el idPersona
+    /**
+     * consigue el idPersona de la cuenta de google
+     */
     fun idPersona(ct: Context):String{
         val usuario = getIdPersona(ct)
         return usuario
     }
 
+    /**
+     * cambia el estado de formato db a server
+     */
     fun estadoDB(estado:Int): Int {
         var estadoKul:Int
         when(estado){
-            1 -> {
-                estadoKul = 0
-            }
-            0 -> {
-                estadoKul = 1
-            }
-            else -> {
-                estadoKul = 1
-            }
+            1 -> estadoKul = 0
+            0 -> estadoKul = 1
+            else -> estadoKul = 1
         }
         return estadoKul
     }
@@ -106,13 +84,13 @@ class PostSend{
      */
     fun initiateList(listaQR:List<String>, ct:Context):List<String>{
         val fecha = formatfecha(listaQR[1])
+        val espar = estadoUltimo(ct ,listaQR[0].toInt(), formatfecha(listaQR[1], false)).toString()
         val listaInsert:List<String> =
                 listOf(idPersona(ct),
                         listaQR[0],
                         fecha,
-                        (estadoUltimo(ct ,listaQR[0].toInt(), formatfecha(listaQR[1], false)).toString()))//estado(ct, listaQR[0].toInt(), fecha).toString())
+                        (espar))//estado(ct, listaQR[0].toInt(), fecha).toString())
 
-        Log.d("listaInsert" , listaInsert.toString())
         return listaInsert
     }
 
@@ -120,6 +98,8 @@ class PostSend{
         val listaRegistroTemp:List<String> = listOf(idPersona(ct), listaRegistro[0], listaRegistro[1], estadoDB(listaRegistro[3].toInt()).toString())
         return listaRegistroTemp
     }
+
+    fun toBoolean(cuestion:String):Boolean = (cuestion == "1")
 
     private fun formatfecha(fechaNoFormat:String, i:Boolean = true):String {
         val trozosFecha = fechaNoFormat.split('/')
@@ -156,8 +136,10 @@ class PostSend{
                 jsonParam.put("valido", true)
                 jsonParam.put("validado", 1)
                 jsonParam.put("tipoRegistro", "Alumno")
-                jsonParam.put("esPar", postList[3].toBoolean())
+                jsonParam.put("esPar", toBoolean(postList[3]))
 
+
+                Log.d("JsonObject", jsonParam.toString())
                 val outputStream = conn.outputStream
                 val outputStreamWriter = OutputStreamWriter(outputStream, "UTF-8")
                 outputStreamWriter.write(jsonParam.toString())
