@@ -6,10 +6,12 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg.RegistroAsistenciaAdapter
 import com.uneatlantico.uneapp.R
-import com.uneatlantico.uneapp.db.estructuras_db.Registro
+import com.uneatlantico.uneapp.db.PostSend
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.recogerRegistros
+import com.uneatlantico.uneapp.db.estructuras_db.Registro
 
 //TODO select a la base de datos sqllite para coger todos los registros y mostrarlos en esta actividad
 class RegistroAsistenciaActivity : AppCompatActivity() {
@@ -19,7 +21,7 @@ class RegistroAsistenciaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro_asistencia)
-
+        val postSend = PostSend()
         val db = recogerRegistros(this)
         getRegistros(db)
 
@@ -27,7 +29,21 @@ class RegistroAsistenciaActivity : AppCompatActivity() {
         val layoutManager:RecyclerView.LayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
 
-        val registroAsistenciaAdapter = RegistroAsistenciaAdapter(db)
+        //val registroAsistenciaAdapter = RegistroAsistenciaAdapter(db)
+        val registroAsistenciaAdapter = RegistroAsistenciaAdapter(db, object : RegistroAsistenciaAdapter.RegistroAsistenciaAdapterListener {
+            override fun cardOnClick(v: View, position: Int) {
+                Log.d("contenidoCartaRegistro", v.eventoTextView.text.toString() + " " + v.fechaTextView.text.toString())
+                postSend.renviarWebService(listOf(v.eventoTextView.text.toString(), v.fechaTextView.text.toString()), applicationContext)
+            }
+
+            /*override fun iconImageViewOnClick(v: View, position: Int) {
+
+            }
+
+            override fun iconImageUnFollowOnClick(v: View, position: Int) {
+
+            }*/
+        })
         recyclerView.adapter = registroAsistenciaAdapter
 
 

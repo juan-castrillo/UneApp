@@ -18,9 +18,11 @@ import com.uneatlantico.uneapp.db.estructuras_db.Registro
  */
 class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter.RegViewHolder> {
     private val mlec: List<Registro>
+    val onClickListener: RegistroAsistenciaAdapterListener
 
-    constructor(mlec: List<Registro>) {
+    constructor(mlec: List<Registro>, listener: RegistroAsistenciaAdapterListener) {
         this.mlec = mlec
+        this.onClickListener = listener
     }
 
 
@@ -42,7 +44,7 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
         return mlec.size
     }
 
-    class RegViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class RegViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var textViewEvento: AppCompatTextView
         var textViewFecha: AppCompatTextView
@@ -54,18 +56,12 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
             textViewFecha = itemView.findViewById(R.id.fechaTextView) as AppCompatTextView
             imageViewEnviado = itemView.findViewById(R.id.stateImage) as ImageView
             card = itemView.findViewById(R.id.card_view_registro) as CardView
+            card.setOnClickListener { v -> onClickListener.cardOnClick(v, adapterPosition) }
         }
     }
-    /*class RegViewHolder: RecyclerView.ViewHolder() {
 
-        private val textViewSub: TextView
-        private val textViewLecTime: TextView
+    interface RegistroAsistenciaAdapterListener {
+        fun cardOnClick(v: View, position: Int)
+    }
 
-        constructor(val itemView: View) {
-            super(itemView)
-            //emptyView = (TextView) itemView.findViewById(R.id.emptyView);
-            textViewSub = itemView.findViewById(R.id.eventoTextView) as TextView
-            textViewLecTime = itemView.findViewById(R.id.fechaTextView) as TextView
-        }
-    }*/
 }

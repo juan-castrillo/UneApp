@@ -2,24 +2,22 @@ package com.uneatlantico.uneapp.db
 
 import android.content.Context
 import android.util.Log
-import com.google.gson.Gson
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.checkProgresoExiste
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.estadoUltimo
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.getIdPersona
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.getRegistro
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.idEventoPorNombre
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.insertarProgreso
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.saveRegistroInDB
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.updateProgreso
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.updateRegistro
 import com.uneatlantico.uneapp.db.estructuras_db.Progreso
 import org.jetbrains.anko.doAsync
+import org.json.JSONArray
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
-import org.json.JSONArray
-
 
 
 /**
@@ -103,7 +101,11 @@ class PostSend{
     }
 
     fun listaUpdate(listaRegistro: List<String>, ct: Context):List<String> {
-        val listaRegistroTemp:List<String> = listOf(idPersona(ct), listaRegistro[0], listaRegistro[1], estadoDB(listaRegistro[3].toInt()).toString())
+        val fullRegistro = getRegistro(idEventoPorNombre(ct, listaRegistro[0]), listaRegistro[1], ct)
+        val listaRegistroTemp:List<String> = listOf(idPersona(ct), //idPersona
+                listaRegistro[0], //idEvento
+                listaRegistro[1], //fecha
+                estadoDB(listaRegistro[3].toInt()).toString()) //estado contrario al de base de datos para llamarWebService
         return listaRegistroTemp
     }
 
@@ -200,10 +202,13 @@ class PostSend{
 
     //TODO determinar si es necesario el registro completo o solo el idEvento y fecha
     fun renviarWebService(registro:List<String>, ct: Context) {
-        if(registro[2].toInt() == 1) {
-            val listaTemp = listaUpdate(registro, ct)
-            if(sendPostRequest(listaTemp, ct) == 1)
-                updateRegistro(registro)
+        doAsync {
+            listaUpdate(ct= ct, listaRegistro = registro)
+            //if (registro[2].toInt() == 1) {
+                val listaTemp = listaUpdate(registro, ct)
+                if (sendPostRequest(listaTemp, ct) == 1)
+                    updateRegistro(registro)
+            //}
         }
     }
 
