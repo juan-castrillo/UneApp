@@ -3,6 +3,8 @@ package com.uneatlantico.uneapp.db
 import android.content.Context
 import android.database.Cursor
 import android.util.Log
+import com.uneatlantico.uneapp.db.estructuras_db.Progreso
+import com.uneatlantico.uneapp.db.estructuras_db.Registro
 import org.jetbrains.anko.doAsync
 
 class UneAppExecuter{
@@ -38,31 +40,10 @@ class UneAppExecuter{
             if (cursor.moveToFirst())
                 id = cursor.getShort(cursor.getColumnIndex("_id"))
             Log.d("idparalogin", id.toString())
+            cursor.close()
         }
         catch (e:Exception) {Log.d("idparaLoginnoDevuelto", e.message)}
         return id
-        /*var GsignIn:List<String>? = null
-        val db = UneAppDB(ct).readableDatabase
-        var nombre:String
-        var email:String
-        var photoUrl:String
-
-        try {
-            val cursor = db.rawQuery("select * from usuario", null)
-
-            if (cursor.moveToFirst()) {
-                nombre = cursor.getString(cursor.getColumnIndex("nombre"))
-                email = cursor.getString(cursor.getColumnIndex("email"))
-                photoUrl = cursor.getString(cursor.getColumnIndex("photoUrl"))
-
-                GsignIn = listOf(nombre, email, photoUrl)
-            }
-            cursor.close()
-        }
-        catch (e: Exception) {
-            Log.d("error consiguiendo ultimo registro", e.message)}
-
-        return GsignIn*/
     }
     companion object {
         fun recogerRegistros(ct: Context): ArrayList<Registro> {
@@ -90,7 +71,7 @@ class UneAppExecuter{
                             //estado = cursor.getInt(cursor.getColumnIndex("estado"))
                             enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
 
-                            registros.add(Registro(Evento = Evento, fecha= fecha, enviado = enviado))
+                            registros.add(Registro(Evento = Evento, fecha = fecha, enviado = enviado))
                             cursor.moveToNext()
                         }
                 } catch (x: Exception) {
@@ -143,14 +124,15 @@ class UneAppExecuter{
             try {
                 val cursor = db.rawQuery("select * from usuario", null)
 
-                if (cursor.moveToFirst()) {
-                    //idPersona = cursor.getString(cursor.getColumnIndex("idPersona"))
-                    nombre = cursor.getString(cursor.getColumnIndex("nombre"))
-                    email = cursor.getString(cursor.getColumnIndex("email"))
-                    photoUrl = cursor.getString(cursor.getColumnIndex("photoUrl"))
-                    Log.d("usuarioString", nombre + email + photoUrl)
-                    GsignIn = listOf(nombre, email, photoUrl)
-                }
+                    if (cursor.moveToFirst()) {
+                        //idPersona = cursor.getString(cursor.getColumnIndex("idPersona"))
+                        nombre = cursor.getString(cursor.getColumnIndex("nombre"))
+                        email = cursor.getString(cursor.getColumnIndex("email"))
+                        photoUrl = cursor.getString(cursor.getColumnIndex("photoUrl"))
+                        Log.d("usuarioString", nombre + email + photoUrl)
+                        GsignIn = listOf(nombre, email, photoUrl)
+                    }
+
                 cursor.close()
             }
             catch (e: Exception) {
@@ -178,11 +160,81 @@ class UneAppExecuter{
                 val db = UneAppDB(ct)
                 val writableDB = db.writableDatabase
                 val sql = "INSERT INTO registros (idEvento, fecha, enviado, estado) VALUES ('${listaInsert[0]}', '${listaInsert[1]}', '${listaInsert[2]}', '${listaInsert[3]}')"
-                Log.d("insertStatement", sql)
+                Log.d("insertRegistro", sql)
                 writableDB.execSQL(sql)
 
                 writableDB.close()
             }
+        }
+
+        fun insertarProgreso(ct: Context, progreso: Progreso){
+            doAsync {
+                val db = UneAppDB(ct)
+                val writableDB = db.writableDatabase
+                val sql = "INSERT INTO progreso_asistencia (idEvento, horasAlumno, horasEvento) VALUES ('${progreso.idEvento}', '${progreso.horasAlumno}', '${progreso.horasEventoTotales}')"
+                Log.d("insertProgreso", sql)
+                writableDB.execSQL(sql)
+
+                writableDB.close()
+            }
+        }
+
+        fun updateProgreso(ct: Context, progreso: Progreso) {
+            doAsync {
+                val db = UneAppDB(ct)
+                val writableDB = db.writableDatabase
+                val sql = "UPDATE progreso_asistencia set horasAlumno = '${progreso.horasAlumno}', horasEvento = '${progreso.horasEventoTotales}' where idEvento = '${progreso.idEvento}'"
+                Log.d("insertProgreso", sql)
+                writableDB.execSQL(sql)
+
+                writableDB.close()
+            }
+        }
+
+        fun devolverProgreso(ct: Context):ArrayList<Progreso>{
+            val progresos = ArrayList<Progreso>()
+            doAsync {
+
+                var evento: String
+                var horasAlumno: Float
+                var horasEvento: Float
+                try {
+                    val db = UneAppDB(ct).readableDatabase
+                    val cursor = db.rawQuery("select e.nombreEvento idEvento,r.horasAlumno horasAlumno,r.horasEvento horasEvento from progreso_asistencia r, eventos e where r.idEvento = e._id", null)
+
+                    if (cursor.moveToFirst()) {
+                        while (!cursor.isAfterLast) {
+                            //idPersona = cursor.getString(cursor.getColumnIndex("idPersona"))
+                            evento = cursor.getString(cursor.getColumnIndex("idEvento"))
+                            horasAlumno = cursor.getFloat(cursor.getColumnIndex("horasAlumno"))
+                            horasEvento = cursor.getFloat(cursor.getColumnIndex("horasEvento"))
+                            Log.d("progresoString", evento + horasAlumno + horasEvento)
+                            progresos.add(Progreso(Evento = evento, horasAlumno = horasAlumno, horasEventoTotales = horasEvento))
+                            cursor.moveToNext()
+                        }
+                    }
+                    cursor.close()
+                }
+                catch (e: Exception) {
+                    Log.d("progresosNoTraidos", e.message)}
+            }
+            return progresos
+        }
+
+        fun checkProgresoExiste(idProgreso:Int, ct: Context):Short{
+            val db = UneAppDB(ct).readableDatabase
+            var count:Short = 0
+            try {
+                val sql = "select COUNT(idEvento) o from progreso_asistencia WHERE idEvento = '$idProgreso'"
+                val cursor = db.rawQuery(sql, null)
+                if (cursor.moveToFirst())
+                    count = cursor.getShort(cursor.getColumnIndex("o"))
+                Log.d("numerosqlcheckprogreso", sql)
+                Log.d("numeroProgresoigual", count.toString())
+                cursor.close()
+            }
+            catch (e:Exception) {}
+            return count
         }
 
         //TODO mejorar el where y areglar parametros

@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.uneatlantico.uneapp.R
-import com.uneatlantico.uneapp.db.Registro
+import com.uneatlantico.uneapp.db.estructuras_db.Registro
 
 
 /**

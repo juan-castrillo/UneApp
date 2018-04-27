@@ -2,10 +2,15 @@ package com.uneatlantico.uneapp.db
 
 import android.content.Context
 import android.util.Log
+import com.google.gson.Gson
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.checkProgresoExiste
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.estadoUltimo
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.getIdPersona
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.insertarProgreso
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.saveRegistroInDB
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.updateProgreso
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.updateRegistro
+import com.uneatlantico.uneapp.db.estructuras_db.Progreso
 import org.jetbrains.anko.doAsync
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -13,6 +18,9 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import org.json.JSONArray
+
+
 
 /**
  * Encargada de enviar los datos al web service
@@ -32,7 +40,7 @@ class PostSend{
         Log.d("registraralumno", "entro")
         val miListaTemp:List<String> = initiateList(listaQR, ct)//.toMutableList()
 
-        val enviado = sendPostRequest(miListaTemp)
+        val enviado = sendPostRequest(miListaTemp, ct)
 
         //creo la lista para Insertar en db
         val listaEspecificaInsert:List<String> = listOf(miListaTemp[1], miListaTemp[2], enviado.toString(), estadoDB(miListaTemp[3].toInt()).toString())
@@ -114,7 +122,7 @@ class PostSend{
     }
 
     //TODO cambiar de http a https
-    fun sendPostRequest(postList: List<String>):Int {
+    fun sendPostRequest(postList: List<String>, ct: Context):Int {
         var enviado:Int = 0
         doAsync {
 
@@ -145,20 +153,34 @@ class PostSend{
                 outputStreamWriter.write(jsonParam.toString())
                 outputStreamWriter.flush()
                 outputStreamWriter.close()
+                val text:String? = conn.inputStream.use { it.reader().use { reader -> reader.readText() } }
 
-                val bufferedReader = BufferedReader(InputStreamReader(conn.inputStream, "UTF-8"))
+                if(text != null) {
+                    Log.d("respuestaWS", text)
 
-                var line: String?
-                val sb = StringBuilder()
+                    val jsonObject = JSONObject(text)
 
-                while ((bufferedReader.readLine()) != null) {
-                    line = bufferedReader.readLine()
-                    sb.append(line)
+                    //list.add(jsonObject.getString("valid"))
+
+                    if(jsonObject.getString("horasTotales") != null)
+                        if(jsonObject.getString("horasAlumno") != null) {
+
+                        val horasArray1 = jsonObject.get("horasAlumno") as JSONArray
+                        val horasAlumno = (horasArray1.getJSONObject(0).getDouble("horas")).toFloat()
+                        //val tsmresponse:Int  = jsonObject.get("horasAlumno") as Js
+
+
+                        val horasArray2 = jsonObject.get("horasTotales") as JSONArray
+                        val horasTotales = (horasArray2.getJSONObject(0).getDouble("horas")).toFloat()
+
+                        val progreso = Progreso(idEvento = postList[1].toInt(), horasAlumno = horasAlumno, horasEventoTotales = horasTotales)
+
+                        //Log.d("listaJson", horasAlumno= progreso.horasAlumno.toString() + " " +  progreso.horasEventoTotales.toString())
+
+                        insertarResponse(ct, progreso)
+                    }
+                    enviado = 1
                 }
-
-                bufferedReader.close()
-                Log.d("Respuestacreo", sb.toString())
-                enviado = 1
             }
             catch (e: Exception){
                 Log.d("responseWebservice", e.message)
@@ -167,11 +189,20 @@ class PostSend{
         return enviado
     }
 
+    private fun insertarResponse(ct: Context, response: Progreso) {
+        Log.d("numeroidEventoCheck", response.idEvento.toString())
+        if(checkProgresoExiste(response.idEvento, ct) > 0)
+            updateProgreso(ct, response)
+
+        else
+            insertarProgreso(ct, response)
+    }
+
     //TODO determinar si es necesario el registro completo o solo el idEvento y fecha
     fun renviarWebService(registro:List<String>, ct: Context) {
         if(registro[2].toInt() == 1) {
             val listaTemp = listaUpdate(registro, ct)
-            if(sendPostRequest(listaTemp) == 1)
+            if(sendPostRequest(listaTemp, ct) == 1)
                 updateRegistro(registro)
         }
     }

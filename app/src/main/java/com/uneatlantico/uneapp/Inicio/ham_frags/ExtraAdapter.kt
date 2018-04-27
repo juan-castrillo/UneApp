@@ -1,23 +1,20 @@
 package com.uneatlantico.uneapp.Inicio.ham_frags
 
-import android.graphics.Color
 import android.support.v7.widget.AppCompatTextView
-import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-import com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg.RegistroAsistenciaAdapter
 import com.uneatlantico.uneapp.R
-import com.uneatlantico.uneapp.db.Registro
+import com.uneatlantico.uneapp.db.estructuras_db.Progreso
+import com.uneatlantico.uneapp.db.estructuras_db.Registro
 
 class ExtraAdapter : RecyclerView.Adapter<ExtraAdapter.RegViewHolder> {
-    private val mlec: List<Registro>
+    private val mlec: List<Progreso>
 
-    constructor(mlec: List<Registro>) {
+    constructor(mlec: List<Progreso>) {
         this.mlec = mlec
     }
 
@@ -29,9 +26,9 @@ class ExtraAdapter : RecyclerView.Adapter<ExtraAdapter.RegViewHolder> {
 
     override fun onBindViewHolder(holder: RegViewHolder, position: Int) {
         holder.textViewEvento.text = mlec[position].Evento
-        //holder.roundCornerProgressBar.progress = mlec[position]
-
-        //holder.imageViewEnviado.setImageResource(R.drawable.tick_enviado)
+        val progreso = (mlec[position].horasAlumno/mlec[position].horasEventoTotales)*100
+        Log.d("progresoAsignatura", progreso.toString())
+        holder.roundCornerProgressBar.progress = progreso
     }
 
     override fun getItemCount(): Int {
