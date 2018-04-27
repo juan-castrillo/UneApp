@@ -9,6 +9,7 @@ import android.view.View
 import com.uneatlantico.uneapp.Inicio.ham_frags.extra.ExtraAdapter
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.devolverProgresos
+import kotlinx.android.synthetic.main.progress_bar.view.*
 
 
 /**

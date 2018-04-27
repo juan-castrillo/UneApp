@@ -53,7 +53,7 @@ class UneAppExecuter{
          */
         fun recogerRegistros(ct: Context): ArrayList<Registro> {
             val registros = ArrayList<Registro>()
-            doAsync {
+            //doAsync {
                 //Log.d("rutaDB", DB_PATH)
                 val db = UneAppDB(ct).readableDatabase
                 lateinit var cursor: Cursor
@@ -84,7 +84,7 @@ class UneAppExecuter{
                 }
                 cursor.close()
 
-            }
+            //}
             return registros
         }
 
@@ -94,21 +94,23 @@ class UneAppExecuter{
          */
         fun estadoUltimo(ct: Context, idEvento: Int, fechahoy:String):Int{
             var estado: Int = 0
-            //lateinit var cursor: Cursor
-            val db = UneAppDB(ct).readableDatabase
-            try {
-                val cursor = db.rawQuery("select estado from registros WHERE idEvento = $idEvento AND fecha LIKE '%$fechahoy%' ORDER BY _id DESC LIMIT 1", null)
+            //doAsync {
+                //lateinit var cursor: Cursor
+                val db = UneAppDB(ct).readableDatabase
+                try {
+                    val cursor = db.rawQuery("select estado from registros WHERE idEvento = $idEvento AND fecha LIKE '%$fechahoy%' ORDER BY _id DESC LIMIT 1", null)
 
-                if (cursor.moveToFirst())
-                    while (!cursor.isAfterLast) {
-                        estado = cursor.getString(cursor.getColumnIndex("estado")).toInt()
-                        cursor.moveToNext() }
-                Log.d("estadoultimoDB", estado.toString())
-                cursor.close()
-            }
-            catch (e: Exception) {
-                Log.d("error consiguiendo ultimo registro", e.message)}
-
+                    if (cursor.moveToFirst())
+                        while (!cursor.isAfterLast) {
+                            estado = cursor.getString(cursor.getColumnIndex("estado")).toInt()
+                            cursor.moveToNext()
+                        }
+                    Log.d("estadoultimoDB", estado.toString())
+                    cursor.close()
+                } catch (e: Exception) {
+                    Log.d("error consiguiendo ultimo registro", e.message)
+                }
+            //}
             return estado
         }
 
@@ -117,16 +119,18 @@ class UneAppExecuter{
          */
         fun devolverUsuario(ct: Context):List<String> {
             var GsignIn:List<String> = emptyList()
-            val db = UneAppDB(ct).readableDatabase
-            //var idPersona:String
-            var nombre:String
-            var email:String
-            var photoUrl:String
+            //doAsync {
+                val db = UneAppDB(ct).readableDatabase
+                //var idPersona:String
+                var nombre: String
+                var email: String
+                var photoUrl: String
 
-            try {
-                val cursor = db.rawQuery("select * from usuario", null)
+                try {
+                    val cursor = db.rawQuery("select * from usuario", null)
 
                     if (cursor.moveToFirst()) {
+
                         //idPersona = cursor.getString(cursor.getColumnIndex("idPersona"))
                         nombre = cursor.getString(cursor.getColumnIndex("nombre"))
                         email = cursor.getString(cursor.getColumnIndex("email"))
@@ -135,11 +139,11 @@ class UneAppExecuter{
                         GsignIn = listOf(nombre, email, photoUrl)
                     }
 
-                cursor.close()
-            }
-            catch (e: Exception) {
-                Log.d("usuarioNoEncontradoEnDB", e.message)}
-
+                    cursor.close()
+                } catch (e: Exception) {
+                    Log.d("usuarioNoEncontradoEnDB", e.message)
+                }
+            //}
             return GsignIn
         }
 
@@ -148,16 +152,17 @@ class UneAppExecuter{
          */
         fun getIdPersona(ct: Context):String{
             var idPersona = ""
-            val db = UneAppDB(ct).readableDatabase
-            try {
-                val cursor = db.rawQuery("select idPersona from usuario", null)
-                if (cursor.moveToFirst())
-                    idPersona = cursor.getString(cursor.getColumnIndex("idPersona"))
-                cursor.close()
-            }
-            catch (e:Exception){
+            //doAsync {
+                val db = UneAppDB(ct).readableDatabase
+                try {
+                    val cursor = db.rawQuery("select idPersona from usuario", null)
+                    if (cursor.moveToFirst())
+                        idPersona = cursor.getString(cursor.getColumnIndex("idPersona"))
+                    cursor.close()
+                } catch (e: Exception) {
 
-            }
+                }
+            //}
             return idPersona
         }
 
@@ -179,38 +184,46 @@ class UneAppExecuter{
         /**
          * Consigo el registro segun el idEvento y la fecha
          */
-        fun getRegistro(idEvent: Int, fech:String, ct: Context):Registro{
-             var registro: Registro = Registro()
-            doAsync {
+        fun getRegistro(idEvento: Int, fecha:String, ct: Context):Registro{
+            var registro:Registro = Registro()
+
+            //doAsync {
                 val db = UneAppDB(ct).readableDatabase
-                val _id:Int
-                val idEvento: Int
-                val fecha:String
-                val enviado:Int
-                val estado:Int
+                var _id:Int
+                var enviado:Int
+                var estado:Int
                 try {
-                    val cursor = db.rawQuery("select * from registros where idEvento = $idEvent AND fecha = $fech", null)
+                    val sql = "select * from registros where idEvento = '$idEvento' AND fecha = '$fecha'"
+                    val cursor = db.rawQuery(sql, null)
+                    Log.d("getRegistrosql", sql)
                     if (cursor.moveToFirst()) {
-                        id = cursor.getInt(cursor.getColumnIndex("_id"))
-                        idEvento = cursor.getInt(cursor.getColumnIndex("idEvento"))
-                        fecha = cursor.getString(cursor.getColumnIndex("fecha"))
-                        estado = cursor.getInt(cursor.getColumnIndex("estado"))
-                        enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
-                        registro = Registro(idEvento = idEvento, fecha = fecha, enviado = enviado, estado = estado, _id= _id)
+
+                            _id = cursor.getInt(cursor.getColumnIndex("_id"))
+                            estado = cursor.getInt(cursor.getColumnIndex("estado"))
+                            enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
+                            //registro.fecha = fecha
+
+                            registro = Registro(_id, idEvento, fecha = fecha, estado = estado, enviado = enviado)
+
                     }
                     cursor.close()
+
                 }
-                catch (e: Exception){Log.d("idEventoNoEncontrado", e.message)}
-            }
+                catch (e: Exception){Log.d("registroNoEncontrado", e.message)}
+            //}
+            //Log.d("eventoSelect", registro.estado.toString())
             return registro
         }
 
         /**
          * Cambio el campo enviado de un registro concreto al ser mandado al WS
          */
-        fun updateRegistro(updateList:List<String>) {
+        fun updateRegistro(updateList:List<String>, ct: Context) {
             doAsync {
+                val db = UneAppDB(ct).writableDatabase
                 val sql = "UPDATE registros set enviado = 1 WHERE idEvento = ${updateList[0]} AND fecha = ${updateList[1]}"
+                db.execSQL(sql)
+                db.close()
             }
         }
 
@@ -249,7 +262,7 @@ class UneAppExecuter{
          */
         fun devolverProgresos(ct: Context):ArrayList<Progreso>{
             val progresos = ArrayList<Progreso>()
-            doAsync {
+            //doAsync {
 
                 var evento: String
                 var horasAlumno: Float
@@ -273,7 +286,7 @@ class UneAppExecuter{
                 }
                 catch (e: Exception) {
                     Log.d("progresosNoTraidos", e.message)}
-            }
+            //}
             return progresos
         }
 
@@ -282,7 +295,7 @@ class UneAppExecuter{
          */
         fun checkProgresoExiste(idProgreso:Int, ct: Context):Short{
             var count: Short = 0
-            doAsync {
+            //doAsync {
                 val db = UneAppDB(ct).readableDatabase
 
                 try {
@@ -295,7 +308,7 @@ class UneAppExecuter{
                     cursor.close()
                 } catch (e: Exception) {
                 }
-            }
+            //}
             return count
         }
 
@@ -304,17 +317,17 @@ class UneAppExecuter{
          */
         fun idEventoPorNombre(ct: Context, nombre: String):Int{
             var idEvento: Int = 0
-            doAsync {
+            //doAsync {
                 val db = UneAppDB(ct).readableDatabase
 
                 try {
-                    val cursor = db.rawQuery("select _id from eventos where nombreEvento = $nombre", null)
+                    val cursor = db.rawQuery("select _id from eventos where nombreEvento = '$nombre'", null)
                     if (cursor.moveToFirst())
                         idEvento = cursor.getInt(cursor.getColumnIndex("_id"))
                     cursor.close()
                 }
                 catch (e: Exception){Log.d("idEventoNoEncontrado", e.message)}
-            }
+            //}
             return idEvento
         }
     }

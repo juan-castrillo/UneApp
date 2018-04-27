@@ -101,11 +101,14 @@ class PostSend{
     }
 
     fun listaUpdate(listaRegistro: List<String>, ct: Context):List<String> {
-        val fullRegistro = getRegistro(idEventoPorNombre(ct, listaRegistro[0]), listaRegistro[1], ct)
+        val idEvento = idEventoPorNombre(ct, listaRegistro[0])
+        val fullRegistro = getRegistro(idEvento, listaRegistro[1], ct)
+
         val listaRegistroTemp:List<String> = listOf(idPersona(ct), //idPersona
-                listaRegistro[0], //idEvento
-                listaRegistro[1], //fecha
-                estadoDB(listaRegistro[3].toInt()).toString()) //estado contrario al de base de datos para llamarWebService
+                fullRegistro.idEvento.toString(), //idEvento
+                fullRegistro.fecha, //fecha
+                estadoDB(fullRegistro.estado).toString()) //estado contrario al de base de datos para llamarWebService
+
         return listaRegistroTemp
     }
 
@@ -202,13 +205,11 @@ class PostSend{
 
     //TODO determinar si es necesario el registro completo o solo el idEvento y fecha
     fun renviarWebService(registro:List<String>, ct: Context) {
+        Log.d("reenviarWebSErvicedatos", registro[0] + "  " + registro[1])
         doAsync {
-            listaUpdate(ct= ct, listaRegistro = registro)
-            //if (registro[2].toInt() == 1) {
-                val listaTemp = listaUpdate(registro, ct)
-                if (sendPostRequest(listaTemp, ct) == 1)
-                    updateRegistro(registro)
-            //}
+            val listaTemp = listaUpdate(registro, ct)
+            if (sendPostRequest(listaTemp, ct) == 1)
+                    updateRegistro(registro, ct)
         }
     }
 

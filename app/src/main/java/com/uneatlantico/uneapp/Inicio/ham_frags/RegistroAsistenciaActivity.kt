@@ -12,6 +12,7 @@ import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.PostSend
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.recogerRegistros
 import com.uneatlantico.uneapp.db.estructuras_db.Registro
+import kotlinx.android.synthetic.main.small_card_layout.view.*
 
 //TODO select a la base de datos sqllite para coger todos los registros y mostrarlos en esta actividad
 class RegistroAsistenciaActivity : AppCompatActivity() {
