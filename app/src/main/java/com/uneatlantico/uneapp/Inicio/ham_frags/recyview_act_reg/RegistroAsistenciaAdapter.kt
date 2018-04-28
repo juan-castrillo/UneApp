@@ -1,5 +1,6 @@
 package com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg
 
+import android.graphics.Color
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -34,7 +35,8 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
         holder.textViewFecha.text = mlec[position].fecha
         holder.textViewEvento.text = mlec[position].Evento
         if(mlec[position].enviado == 0)
-                holder.card.setCardBackgroundColor(getItemViewType(R.color.colorAccent))
+                //holder.card.setCardBackgroundColor(getItemViewType(R.color.colorAccent))
+            holder.card.setCardBackgroundColor(Color.BLUE)
         //holder.imageViewEnviado.setImageResource(R.drawable.tick_enviado)
     }
 

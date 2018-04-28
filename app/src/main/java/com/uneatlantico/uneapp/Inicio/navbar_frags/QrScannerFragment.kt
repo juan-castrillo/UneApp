@@ -1,11 +1,8 @@
 package com.uneatlantico.uneapp.Inicio.navbar_frags
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-
 import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
 import android.os.Bundle
@@ -14,7 +11,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,16 +18,13 @@ import android.widget.Button
 import android.widget.ImageView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
-import com.google.zxing.integration.android.IntentIntegrator
 import com.journeyapps.barcodescanner.*
-import com.journeyapps.barcodescanner.camera.CameraParametersCallback
-import com.uneatlantico.uneapp.db.PostSend
 import com.uneatlantico.uneapp.R
+import com.uneatlantico.uneapp.db.PostSend
 import kotlinx.android.synthetic.main.fragment_qr_scanner.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import com.journeyapps.barcodescanner.camera.CameraSettings;
 
 
 /**
@@ -58,15 +51,16 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
         qrResponseImage = v.findViewById(R.id.qr_recibido_imagen) as ImageView
         qrResponseImage.alpha = 0f
-        if(checkWifiUneat())
-            init(v)
+        init(v)
+
+        checkWifiUneat()
+        barcodeScannerView.resume()
 
         return v
     }
 
     /**
-     * permission true -> location
-     * permission false -> camera
+     * permission for camera and location
      */
     private fun askPermision(){
 
@@ -84,6 +78,29 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    private fun init(v: View) {
+        b = v.findViewById(R.id.button) as Button
+        b.setOnClickListener(this)
+
+        /*val s:CameraSettings = CameraSettings()
+        s.isExposureEnabled = false
+        s.isMeteringEnabled = false
+        s.isScanInverted = false
+        s.requestedCameraId = 2*/
+
+        barcodeScannerView = v.findViewById(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
+        //barcodeScannerView.barcodeView.cameraSettings = s
+        barcodeScannerView.setStatusText(" ")
+        val formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
+        barcodeScannerView.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
+        barcodeScannerView.decodeContinuous(callback)
+
+
+        //barcodeScannerView.barcodeView.cameraDistance = 100.0f
+        //barcodeScannerView.pause()
+
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -94,19 +111,6 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         super.onPause()
 
         barcodeScannerView.pause()
-    }
-
-    private fun init(v: View) {
-        b = v.findViewById(R.id.button) as Button
-        b.setOnClickListener(this)
-
-        barcodeScannerView = v.findViewById(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
-        barcodeScannerView.setStatusText(" ")
-        barcodeScannerView.viewFinder
-        val formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
-        barcodeScannerView.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
-        barcodeScannerView.decodeContinuous(callback)
-
     }
 
     private val callback = object : BarcodeCallback {
@@ -124,16 +128,15 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
     }
 
-    //TODO comprobar si el usuario está en la red de la universidad antes de permitir abrir el scanner
     override fun onClick(v: View) {
         when(v.id) {
             R.id.button -> {
-                Log.d("boton escaneo", "has pulsado mi boton")
+
+                if(checkWifiUneat()){
                 qrResponseImage.alpha = 0f
                 barcodeScannerView.resume()
-                barcodeScannerView.visibility = View.VISIBLE
+                barcodeScannerView.visibility = View.VISIBLE}
             }
-            else ->Log.d("boton escaneo", "NO has pulsado MI boton")
         }
 
 
@@ -150,8 +153,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
                 wifiSSID = wifiInfo.ssid
             }
             else
-                wifiSSID = "No hay conexion"
-
+                wifiSSID = "ninguna red"
 
             when (wifiSSID) { //TODO eliminar "AndroidWifi", "si", "wilkswifi" cuando salga a release
                 "\"wuneat-becarios\"", "\"wuneat-alum\"", "\"wifiuneat-publica\"", "\"wifiuneat-pas\"", "\"AndroidWifi\"",
@@ -160,11 +162,14 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
             if (redCorrecta)
                 //initiateQrScanner()
-            else
+            else{
+                //barcodeScannerView.pause()
                 mensaje("Debes estar conectado a la red de la universidad, usted está conectado a ${wifiSSID}", "Alerta Escaner QR")
+            }
         }
         catch (e: Exception){
             mensaje("Debes estar conectado a la red de la universidad", "Alerta Escaner QR")
+            Log.d("exceptionwifi", e.message)
         }
         return redCorrecta
     }

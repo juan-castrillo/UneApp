@@ -14,14 +14,13 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
+        android:background="@color/blancoPuro"
         card_view:cardCornerRadius="5dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginHorizontal="16dp"
-            >
+            android:padding="@dimen/small_padding">
 
             <TextView
                 android:id="@+id/title"
@@ -30,14 +29,15 @@
 
                 android:paddingLeft="@dimen/card_title_padding"
                 android:paddingRight="@dimen/card_title_padding"
-                android:paddingTop="@dimen/card_title_padding"
+                android:paddingTop="@dimen/small_padding"
                 android:textColor="@color/negro"
                 android:textSize="@dimen/card_title" />
 
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="wrap_content"
-                android:layout_height="160dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/card_title_padding"
                 android:layout_below="@id/title"
                 android:scaleType="fitXY" />
 
@@ -49,20 +49,22 @@
 
                 android:layout_below="@id/title"
 
-                android:paddingBottom="5dp"
-                android:paddingLeft="@dimen/card_title_padding"
-                android:paddingRight="@dimen/card_title_padding"
+               android:padding="@dimen/card_title_padding"
                 android:textSize="@dimen/card_extratext" />
 
             <ImageView
-                android:id="@+id/overflow"
+                android:id="@+id/settings_3_dots"
                 android:layout_width="20dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_below="@id/thumbnail"
+
                 android:layout_marginBottom="6dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/settings" />
+                android:layout_marginRight="@dimen/small_padding"
+                android:src="@drawable/settings"
+                android:background="?android:attr/selectableItemBackground"
+                android:focusable="true"
+                android:clickable="true"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

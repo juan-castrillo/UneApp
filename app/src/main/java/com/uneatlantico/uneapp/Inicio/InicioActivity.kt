@@ -47,9 +47,9 @@ class InicioActivity : AppCompatActivity() {
     //TODO eliminar estas variables
     //fragmentos para la barra de navegacion inferior
     private var inicioFragment = InicioFragment.newInstance()
-    private var campusFragment = CampusFragment.newInstance()
+    /*private var campusFragment = CampusFragment.newInstance()
     private var qrScannerFragment = QrScannerFragment()
-    private var horarioFragment = HorarioFragment.newInstance()
+    private var horarioFragment = HorarioFragment.newInstance()*/
     private val fm = supportFragmentManager
 
     //variables para el menu hamburguesa lateral
@@ -178,23 +178,23 @@ class InicioActivity : AppCompatActivity() {
 
             R.id.navigation_home -> {
                 //val inicioFragment = InicioFragment.newInstance()
-                openFragment(inicioFragment)
+                openFragment(InicioFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_campus -> {
 
                 //campusFragment = CampusFragment.newInstance()
-                openFragment(campusFragment)
+                openFragment(CampusFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_qr -> {
                 //qrScannerFragment = QrScannerFragment.newInstance()
-                openFragment(qrScannerFragment)
+                openFragment(QrScannerFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_horario -> {
                 //horarioFragment = HorarioFragment.newInstance()
-                openFragment(horarioFragment)
+                openFragment(HorarioFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -211,14 +211,14 @@ class InicioActivity : AppCompatActivity() {
                 .commit()
     }
 
-    private fun hideAllFragments(){
+    /*private fun hideAllFragments(){
         val transaction2 = fm.beginTransaction()
         transaction2.hide(inicioFragment)
         transaction2.hide(campusFragment)
         transaction2.hide(qrScannerFragment)
         transaction2.hide(horarioFragment)
         transaction2.commit()
-    }
+    }*/
 
     /**
      * Preguntar al usuario si desea salir que pulse de nuevo al boton ATRAS

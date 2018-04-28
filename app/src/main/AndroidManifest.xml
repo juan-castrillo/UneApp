@@ -5,8 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -18,18 +18,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon"
+        tools:replace="android:icon">
+        <meta-data
+            android:name="DATABASE"
+            android:value="UneApp.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="0" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.uneatlantico.uneapp" />
 
-        >
-        <meta-data android:name="DATABASE" android:value="UneApp.db" />
-        <meta-data android:name="VERSION" android:value="0" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.uneatlantico.uneapp" />
         <receiver
             android:name=".features.UneReceiver"
             android:enabled="true"
-            android:exported="false" >
-        </receiver>
+            android:exported="false"></receiver>
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
@@ -43,27 +50,26 @@
         </activity>
         <activity
             android:name=".Inicio.InicioActivity"
-            android:screenOrientation="portrait"
-
-
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="landscape"
             tools:replace="screenOrientation" />
-
-        <activity android:name=".Inicio.ham_frags.ExtraActivity"
-            android:theme="@style/ham_Theme"
-            />
-        <activity android:name=".Inicio.ham_frags.NotasActivity"
-            android:theme="@style/ham_Theme"
-            />
-        <activity android:name=".Inicio.ham_frags.RegistroAsistenciaActivity"
-            android:theme="@style/ham_Theme"
-            />
-        <activity android:name=".Inicio.ham_frags.SettingsActivity"
-            android:theme="@style/ham_Theme"
-            />
+        <activity
+            android:name=".Inicio.ham_frags.ExtraActivity"
+            android:theme="@style/ham_Theme" />
+        <activity
+            android:name=".Inicio.ham_frags.NotasActivity"
+            android:theme="@style/ham_Theme" />
+        <activity
+            android:name=".Inicio.ham_frags.RegistroAsistenciaActivity"
+            android:theme="@style/ham_Theme" />
+        <activity
+            android:name=".Inicio.ham_frags.SettingsActivity"
+            android:theme="@style/ham_Theme" />
+        <activity
+            android:name=".Inicio.navbar_frags.recyview_frag_inicio.InicioWebViewActivity"
+            android:theme="@style/ham_Theme" />
     </application>
 
 </manifest>
