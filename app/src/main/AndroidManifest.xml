@@ -70,7 +70,7 @@
             android:label="Preferences"
             />
         <activity
-            android:name=".Inicio.navbar_frags.recyview_frag_inicio.InicioWebViewActivity"
+            android:name="WebViewActivity"
             android:theme="@style/ham_Theme" />
     </application>
 

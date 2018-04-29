@@ -16,8 +16,8 @@ import android.widget.PopupMenu
 import com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio.InicioAdapter
 import com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio.InicioData
 import com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio.InicioSwipeDeleteCallback
-import com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio.InicioWebViewActivity
 import com.uneatlantico.uneapp.R
+import com.uneatlantico.uneapp.WebViewActivity
 import kotlinx.android.synthetic.main.card_layout.view.*
 
 
@@ -72,7 +72,7 @@ class InicioFragment : Fragment() {
     }
 
     private fun abrirLink(url:String, titulo:String){
-        val i = Intent(this.context, InicioWebViewActivity::class.java)
+        val i = Intent(this.context, WebViewActivity::class.java)
         i.putExtra("url", url)
         i.putExtra("titulo", titulo)
         //finish()  //Kill the activity from which you will go to next activity

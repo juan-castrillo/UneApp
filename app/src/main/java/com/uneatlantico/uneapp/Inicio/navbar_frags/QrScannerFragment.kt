@@ -2,6 +2,7 @@ package com.uneatlantico.uneapp.Inicio.navbar_frags
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
@@ -11,16 +12,18 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.*
-import com.uneatlantico.uneapp.Inicio.InicioActivity
 import com.uneatlantico.uneapp.R
+import com.uneatlantico.uneapp.WebViewActivity
 import com.uneatlantico.uneapp.db.PostSend
 import kotlinx.android.synthetic.main.fragment_qr_scanner.*
 import java.text.SimpleDateFormat
@@ -51,12 +54,18 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
         val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
 
+        b = v.findViewById(R.id.button) as Button
+        b.setOnClickListener(this)
         qrResponseImage = v.findViewById(R.id.qr_recibido_imagen) as ImageView
+        qrResponseImage.setImageResource(R.drawable.tick_enviado)
         qrResponseImage.alpha = 0f
+
         init(v)
 
-        //if(!checkWifiUneat())
-            Log.d("wificorrecto", checkWifiUneat().toString())
+        /*if(!checkWifiUneat())
+            lastText = "w"
+        else{ lastText = null}*/
+            //Log.d("wificorrecto", checkWifiUneat().toString())
             //barcodeScannerView.pause()
 
         return v
@@ -78,17 +87,18 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     }
 
     private fun init(v: View) {
-        b = v.findViewById(R.id.button) as Button
-        b.setOnClickListener(this)
+
 
         /*val s:CameraSettings = CameraSettings()
         s.isExposureEnabled = false
         s.isMeteringEnabled = false
         s.isScanInverted = false
         s.requestedCameraId = 2*/
-
+        //val nolosetampoco = CameraManager
+        //val algo = CameraPreview(this.context).cameraSettings.
         barcodeScannerView = v.findViewById(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
         //barcodeScannerView.barcodeView.cameraSettings = s
+        //barcodeScannerView.viewFinder.visibility = View.INVISIBLE
         barcodeScannerView.setStatusText(" ")
         val formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
         barcodeScannerView.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
@@ -114,15 +124,13 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
     private val callback = object : BarcodeCallback {
         override fun barcodeResult(result: BarcodeResult) {
+            barcodeScannerView.pause()
+            barcodeScannerView.visibility = View.GONE
             if (result.text == null || result.text == lastText) {
                 return
             }
-
             lastText = result.text
-            barcodeScannerView.pause()
             handleQrResult(lastText.toString())
-            barcodeScannerView.visibility = View.GONE
-
         }
         override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
     }
@@ -132,13 +140,14 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             R.id.button -> {
 
                 if(checkWifiUneat()){
-                qrResponseImage.alpha = 0f
-                barcodeScannerView.resume()
-                barcodeScannerView.visibility = View.VISIBLE}
+                    lastText = null
+                    qrResponseImage.alpha = 0f
+                    barcodeScannerView.visibility = View.VISIBLE
+                    barcodeScannerView.resume()}
+
             }
+            else -> Log.d("holahola", "adioszxd")
         }
-
-
     }
 
     //TODO llamar a este metodo
@@ -162,7 +171,6 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             if (redCorrecta)
                 //initiateQrScanner()
             else{
-                //barcodeScannerView.pause()
                 mensaje("Debes estar conectado a la red de la universidad, usted está conectado a ${wifiSSID}", "Alerta Escaner QR")
             }
         }
@@ -178,31 +186,61 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
      * Compruebo si el formato es el adecuado
      */
     private fun handleQrResult(qrContents: String) {
-        val partes = qrContents.split('_')
 
         try {
-
-            var idEvento: String = partes[0]
-            var fecha: String = partes[1]
-            if(comprobarFecha(fecha)) {
+            val partes = qrContents.split('_')
+            val idEvento: String = partes[0]
+            val fecha: String = partes[1]
+            if(comprobarFecha(fecha) && checkWifiUneat()) {
                 val listaQR: List<String> = listOf(idEvento, fecha)
-                Log.d("listaQR antes de mandar", listaQR.toString())
-                //mensaje("Recibido", "QR respuesta")
+
+                qrResponseImage.setImageResource(R.drawable.tick_enviado)
                 qr_recibido_imagen.alpha = 1f
                 insertarRegistroQr(listaQR)
             }
 
             //TODO poner imagen con una x
-            else mensaje("QR expirado", "QR respuesta")
-            //insertarRegistroQr(idEvento.toLong(), fecha)
+            else {
+                mensaje("QR expirado", "QR respuesta")
+                qrResponseImage.setImageResource(R.drawable.red_cross)
+                qr_recibido_imagen.alpha = 1f
+            }
         }
 
         //TODO poner imagen con una x
         catch (z: Exception) {
-            //Toast.makeText(this.context, "no compatible", Toast.LENGTH_SHORT)//TODO hacer algo cuando el qr no cumpla los parámetros adecuados
+            analizeQr(qrContents)
             Log.d("excepcionhandleQRresult", z.message)
-            mensaje("no compatible")
+            //mensaje("no compatible")
         }
+    }
+
+    private fun analizeQr(qrContents: String){
+        try{
+            val partes = qrContents.split(':')
+            if(partes[0] == "http" || partes[0] == "https"){
+                startUrlAlert(qrContents)
+            }
+            else{
+                mensaje(qrContents,"Contenido QR")
+            }
+        }catch (e:Exception){}
+    }
+
+    private fun startUrlAlert(qrContents: String) {
+        val builder = AlertDialog.Builder(this.context!!)
+        builder.setMessage("Desea usted abrir \"$qrContents\"?")
+                .setCancelable(false)
+                .setPositiveButton("OK") { _, _ ->
+                    Toast.makeText(this.context!!, "abriendo $qrContents", Toast.LENGTH_SHORT).show()
+                    val i = Intent(this.context, WebViewActivity::class.java)
+                        i.putExtra("url", qrContents)
+                        i.putExtra("titulo", "QR")
+                        startActivityForResult(i, 0)
+                }
+        val alert = builder.create()
+        alert.setCanceledOnTouchOutside(true)
+        alert.show()
     }
 
     private fun comprobarFecha(fechaQR: String): Boolean {
@@ -233,6 +271,8 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     private fun insertarRegistroQr(listaQR:List<String>){
         PostSend(listaQR, this.context!!)
     }
+
+
 
     companion object {
         fun newInstance(): QrScannerFragment = QrScannerFragment()

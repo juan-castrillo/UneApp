@@ -1,13 +1,12 @@
-package com.uneatlantico.uneapp.Inicio.navbar_frags.recyview_frag_inicio
+package com.uneatlantico.uneapp
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import com.uneatlantico.uneapp.R
 
-class InicioWebViewActivity : AppCompatActivity() {
+class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
