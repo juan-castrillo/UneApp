@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="General"
+        android:key="pref_key_storage_settings">
+        <CheckBoxPreference
+            android:key="qr_default"
+            android:summary="Abrir por defecto pantalla de lectura QR"
+            android:title="Abrir por defecto"
+            android:defaultValue="false"/>
+        <Preference
+            android:key="a"
+            android:dependency="pref_key_auto_delete"
+            android:summary="a"
+            android:title="b"/>
+        <Preference
+            android:key="b"
+            android:dependency="pref_key_auto_delete"
+            android:summary="c"
+            android:title="d" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -9,7 +9,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/registro_asistencias_recyclerview"
         android:scrollbars="vertical"
-        android:layout_marginTop="85dp"
+        android:layout_marginTop="@dimen/actionbar_margin"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"

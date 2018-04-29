@@ -32,10 +32,10 @@
             android:name="DOMAIN_PACKAGE_NAME"
             android:value="com.uneatlantico.uneapp" />
 
-        <receiver
+        <!--<receiver
             android:name=".features.UneReceiver"
             android:enabled="true"
-            android:exported="false"></receiver>
+            android:exported="false"></receiver>-->
 
         <activity
             android:name=".LoginActivity"
@@ -66,7 +66,9 @@
             android:theme="@style/ham_Theme" />
         <activity
             android:name=".Inicio.ham_frags.SettingsActivity"
-            android:theme="@style/ham_Theme" />
+            android:theme="@style/ham_Theme"
+            android:label="Preferences"
+            />
         <activity
             android:name=".Inicio.navbar_frags.recyview_frag_inicio.InicioWebViewActivity"
             android:theme="@style/ham_Theme" />

@@ -6,4 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".Inicio.ham_frags.SettingsActivity">
 
+    <FrameLayout
+        android:id="@+id/settings_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/actionbar_margin"/>
+
 </android.support.constraint.ConstraintLayout>

@@ -9,7 +9,7 @@ import com.uneatlantico.uneapp.Inicio.InicioActivity
 import com.uneatlantico.uneapp.R
 
 
-class UneIntentServices : IntentService("MyNewIntentService") {
+/*class UneIntentServices : IntentService("MyNewIntentService") {
 
     override fun onHandleIntent(intent: Intent?) {
         val builder = Notification.Builder(this)
@@ -28,4 +28,4 @@ class UneIntentServices : IntentService("MyNewIntentService") {
     companion object {
         private val NOTIFICATION_ID = 3
     }
-}
+}*/

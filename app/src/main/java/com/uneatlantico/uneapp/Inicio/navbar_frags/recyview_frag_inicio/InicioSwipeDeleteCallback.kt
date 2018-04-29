@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 
 
-abstract class InicioSwipeDeleteCallback(context: Context) : ItemTouchHelper.SimpleCallback(1, ItemTouchHelper.RIGHT) {
+abstract class InicioSwipeDeleteCallback() : ItemTouchHelper.SimpleCallback(1, ItemTouchHelper.RIGHT) {
 
     /*private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24)
     private val intrinsicWidth = deleteIcon.intrinsicWidth

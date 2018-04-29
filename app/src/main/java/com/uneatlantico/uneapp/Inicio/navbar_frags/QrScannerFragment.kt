@@ -19,12 +19,14 @@ import android.widget.ImageView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.*
+import com.uneatlantico.uneapp.Inicio.InicioActivity
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.PostSend
 import kotlinx.android.synthetic.main.fragment_qr_scanner.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 /**
@@ -53,8 +55,9 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         qrResponseImage.alpha = 0f
         init(v)
 
-        checkWifiUneat()
-        barcodeScannerView.resume()
+        //if(!checkWifiUneat())
+            Log.d("wificorrecto", checkWifiUneat().toString())
+            //barcodeScannerView.pause()
 
         return v
     }
@@ -63,19 +66,15 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
      * permission for camera and location
      */
     private fun askPermision(){
-
-        if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            } else {
-                ActivityCompat.requestPermissions(this.activity, Array(2) { Manifest.permission.ACCESS_COARSE_LOCATION }, 1)
-            }
-        }
-        if (ContextCompat.checkSelfPermission(this.context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity, Manifest.permission.CAMERA)) {
-            } else {
-                ActivityCompat.requestPermissions(this.activity, Array(2) { Manifest.permission.CAMERA }, 1)
-            }
-        }
+        val permissionCamera:Int = ContextCompat.checkSelfPermission(this.context!!, Manifest.permission.CAMERA)
+        val permissionLocation:Int = ContextCompat.checkSelfPermission(this.context!!, Manifest.permission.ACCESS_COARSE_LOCATION)
+        var listPermissionsNeeded = ArrayList<String>()
+        if(permissionLocation != PackageManager.PERMISSION_GRANTED)
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        if(permissionCamera != PackageManager.PERMISSION_GRANTED)
+            listPermissionsNeeded.add(Manifest.permission.CAMERA)
+        if(!listPermissionsNeeded.isEmpty())
+            ActivityCompat.requestPermissions(this.activity!!, listPermissionsNeeded.toTypedArray(), 0)
     }
 
     private fun init(v: View) {
@@ -147,7 +146,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         var redCorrecta = false
         try {
             var wifiSSID:String
-            val wifiManager = activity.applicationContext.getSystemService(Context.WIFI_SERVICE)as WifiManager
+            val wifiManager = activity!!.applicationContext.getSystemService(Context.WIFI_SERVICE)as WifiManager
             val wifiInfo = wifiManager.connectionInfo
             if (wifiInfo.supplicantState == SupplicantState.COMPLETED) {
                 wifiSSID = wifiInfo.ssid
@@ -232,7 +231,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     }
 
     private fun insertarRegistroQr(listaQR:List<String>){
-        PostSend(listaQR, this.context)
+        PostSend(listaQR, this.context!!)
     }
 
     companion object {
@@ -240,7 +239,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     }
 
     private fun mensaje(msg: String= "no especificado", ttl:String="titulo generico" ) {
-        val builder = AlertDialog.Builder(this.context)
+        val builder = AlertDialog.Builder(this.context!!)
         builder.setMessage(msg).setTitle(ttl)
         val dialog = builder.create()
         dialog.show()

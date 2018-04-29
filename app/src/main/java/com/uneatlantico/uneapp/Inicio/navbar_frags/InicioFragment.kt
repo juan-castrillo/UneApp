@@ -38,7 +38,7 @@ class InicioFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_inicio, container, false)
-        val inicioData = InicioData(this.context)
+        val inicioData = InicioData(this.context!!)
         val inicioNoticias = inicioData.listaNoticias
         var recyclerView = view!!.findViewById<RecyclerView>(R.id.recyclerView)
 
@@ -53,13 +53,13 @@ class InicioFragment : Fragment() {
                 showPopupMenu(v.settings_3_dots, position)
             }
 
-        }, this.context)
+        }, this.context!!)
 
         recyclerView.adapter = inicioAdapter
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
 
-        val swipeHandler = object : InicioSwipeDeleteCallback(this.context) {
+        val swipeHandler = object : InicioSwipeDeleteCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = recyclerView.adapter as InicioAdapter
                 adapter.removeAt(viewHolder.adapterPosition)
