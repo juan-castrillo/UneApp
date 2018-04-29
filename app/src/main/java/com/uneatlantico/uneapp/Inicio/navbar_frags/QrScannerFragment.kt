@@ -60,13 +60,8 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         qrResponseImage.setImageResource(R.drawable.tick_enviado)
         qrResponseImage.alpha = 0f
 
+        checkWifiUneat()
         init(v)
-
-        /*if(!checkWifiUneat())
-            lastText = "w"
-        else{ lastText = null}*/
-            //Log.d("wificorrecto", checkWifiUneat().toString())
-            //barcodeScannerView.pause()
 
         return v
     }
