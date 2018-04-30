@@ -60,7 +60,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         qrResponseImage.setImageResource(R.drawable.tick_enviado)
         qrResponseImage.alpha = 0f
 
-        checkWifiUneat()
+        //checkWifiUneat()
         init(v)
 
         return v
@@ -159,7 +159,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
                 wifiSSID = "ninguna red"
 
             when (wifiSSID) { //TODO eliminar "AndroidWifi", "si", "wilkswifi" cuando salga a release
-                "\"wuneat-becarios\"", "\"wuneat-alum\"", "\"wifiuneat-publica\"", "\"wifiuneat-pas\"", "\"AndroidWifi\"",
+                "\"wuneat-becarios\"", "\"wuneat-becarios-5g\"", "\"wuneat-alum\"", "\"wifiuneat-publica\"", "\"wifiuneat-pas\"", "\"AndroidWifi\"",
                 "\"si\"", "\"wilkswifi\"" -> redCorrecta = true
             }
 

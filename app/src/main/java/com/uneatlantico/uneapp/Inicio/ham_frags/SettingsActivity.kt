@@ -1,6 +1,8 @@
 package com.uneatlantico.uneapp.Inicio.ham_frags
 
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
@@ -11,25 +13,26 @@ import com.uneatlantico.uneapp.R
 
 class SettingsActivity : AppCompatActivity() {
 
+    private val fm = supportFragmentManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (fragmentManager.findFragmentById(R.id.settings_container) == null) {
-            fragmentManager.beginTransaction()
-                    .add(R.id.settings_container, SettingsFragment()).commit()
-        }
-
-        title = intent.getStringExtra("title")
+        //if (fragmentManager.findFragmentById(android.R.id.content) == null) {
+            /*fm.beginTransaction()
+                    .add(R.id.settings_container, SettingsFragment()).commit()*/
+        //}
     }
+
 
     class SettingsFragment : PreferenceFragment() {
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             addPreferencesFromResource(R.xml.preferences)
 
-            bindPreferenceSummaryToValue(findPreference("qr_default"))
-            bindPreferenceSummaryToValue(findPreference("a"))
-            bindPreferenceSummaryToValue(findPreference("b"))
+            bindPreferenceSummaryToValue(findPreference("checkbox"))
+            bindPreferenceSummaryToValue(findPreference("text"))
+            //bindPreferenceSummaryToValue(findPreference("switch"))
         }
     }
 
@@ -51,13 +54,12 @@ class SettingsActivity : AppCompatActivity() {
 
                 // Set the summary to reflect the new value.
                 preference.setSummary(
-                        if (index >= 0) listPreference.entries[index]
-                        else null
-                )
+                        if (index >= 0)
+                            listPreference.entries[index]
+                        else
+                            null)
 
-            }
-
-            else if (preference is RingtonePreference) {
+            } else if (preference is RingtonePreference) {
                 // For ringtone preferences, look up the correct display value
                 // using RingtoneManager.
                 if (TextUtils.isEmpty(stringValue)) {
@@ -99,5 +101,4 @@ class SettingsActivity : AppCompatActivity() {
                             .getString(preference.key, ""))
         }
     }
-
 }

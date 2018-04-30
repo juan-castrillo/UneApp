@@ -43,6 +43,7 @@ class UneAppExecuter{
             cursor.close()
         }
         catch (e:Exception) {Log.d("idparaLoginnoDevuelto", e.message)}
+        db.close()
         return id
     }
     companion object {
@@ -58,7 +59,7 @@ class UneAppExecuter{
                 val db = UneAppDB(ct).readableDatabase
                 lateinit var cursor: Cursor
                 try {
-                    cursor = db.rawQuery("select e.nombreEvento idEvento,r.fecha fecha,r.enviado enviado,r.estado estado from registros r, eventos e where r.idEvento = e._id", null)
+                    cursor = db.rawQuery("select e.nombreEvento idEvento,r.fecha fecha,r.enviado enviado,r.estado estado from registros r, eventos e where r.idEvento = e._id ORDER BY fecha desc", null)
                 } catch (e: Exception) {
                     Log.d("queryRecogerAll", e.message)
                 }
@@ -83,6 +84,48 @@ class UneAppExecuter{
                     Log.d("asignacionRecogerAll", x.message)
                 }
                 cursor.close()
+            db.close()
+
+            //}
+            return registros
+        }
+
+
+        fun recogerRegistros(ct: Context, idEvento: Int): ArrayList<Registro> {
+            val registros = ArrayList<Registro>()
+            //doAsync {
+            //Log.d("rutaDB", DB_PATH)
+            val db = UneAppDB(ct).readableDatabase
+            lateinit var cursor: Cursor
+            try {
+                val sql = "select fecha, enviado, nombreEvento from registros inner join Eventos on registros.idEvento = eventos._id where idEvento = '$idEvento'  ORDER BY fecha desc"
+                cursor = db.rawQuery(sql, null)
+                //Log.d("sqlExtraRegistro", sql)
+            } catch (e: Exception) {
+                Log.d("queryRecogerAll", e.message)
+            }
+            try {
+                //var id: Int
+                var Evento: String
+                var fecha: String
+                //var estado: Int
+                var enviado: Int
+                if (cursor.moveToFirst())
+                    while (!cursor.isAfterLast) {
+                        //id = cursor.getInt(cursor.getColumnIndex("_id"))
+                        Evento = cursor.getString(cursor.getColumnIndex("nombreEvento"))
+                        fecha = cursor.getString(cursor.getColumnIndex("fecha"))
+                        //estado = cursor.getInt(cursor.getColumnIndex("estado"))
+                        enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
+                        Log.d("miEvento", Evento)
+                        registros.add(Registro(Evento = Evento, fecha = fecha, enviado = enviado))
+                        cursor.moveToNext()
+                    }
+            } catch (x: Exception) {
+                Log.d("asignacionRecogerAll", x.message)
+            }
+            cursor.close()
+            db.close()
 
             //}
             return registros
@@ -92,7 +135,7 @@ class UneAppExecuter{
          * Devuelve el ultimo estado de una materia concreta para conocer
          * que estado se debe insertar en el siguiente registro
          */
-        fun estadoUltimo(ct: Context, idEvento: Int, fechahoy:String):Int{
+        fun estadoUltimo(ct: Context, idEvento: Int, fechahoy:String = ""):Int{
             var estado: Int = 0
             //doAsync {
                 //lateinit var cursor: Cursor
@@ -110,6 +153,7 @@ class UneAppExecuter{
                 } catch (e: Exception) {
                     Log.d("error consiguiendo ultimo registro", e.message)
                 }
+            db.close()
             //}
             return estado
         }
@@ -143,6 +187,7 @@ class UneAppExecuter{
                 } catch (e: Exception) {
                     Log.d("usuarioNoEncontradoEnDB", e.message)
                 }
+            db.close()
             //}
             return GsignIn
         }
@@ -162,6 +207,7 @@ class UneAppExecuter{
                 } catch (e: Exception) {
 
                 }
+            db.close()
             //}
             return idPersona
         }
@@ -210,6 +256,7 @@ class UneAppExecuter{
 
                 }
                 catch (e: Exception){Log.d("registroNoEncontrado", e.message)}
+            db.close()
             //}
             //Log.d("eventoSelect", registro.estado.toString())
             return registro
@@ -221,7 +268,7 @@ class UneAppExecuter{
         fun updateRegistro(updateList:List<String>, ct: Context) {
             doAsync {
                 val db = UneAppDB(ct).writableDatabase
-                val sql = "UPDATE registros set enviado = 1 WHERE idEvento = ${updateList[0]} AND fecha = ${updateList[1]}"
+                val sql = "UPDATE registros set enviado = 1 WHERE idEvento = ${updateList[1]} AND fecha = '${updateList[2]}'"
                 db.execSQL(sql)
                 db.close()
             }
@@ -283,6 +330,7 @@ class UneAppExecuter{
                         }
                     }
                     cursor.close()
+                    db.close()
                 }
                 catch (e: Exception) {
                     Log.d("progresosNoTraidos", e.message)}
@@ -308,6 +356,7 @@ class UneAppExecuter{
                     cursor.close()
                 } catch (e: Exception) {
                 }
+            db.close()
             //}
             return count
         }
@@ -328,6 +377,7 @@ class UneAppExecuter{
                 }
                 catch (e: Exception){Log.d("idEventoNoEncontrado", e.message)}
             //}
+            db.close()
             return idEvento
         }
     }

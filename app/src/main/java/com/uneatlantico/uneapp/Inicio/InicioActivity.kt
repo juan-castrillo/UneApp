@@ -20,10 +20,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.uneatlantico.uneapp.BottomNavigationViewComplements
-import com.uneatlantico.uneapp.Inicio.ham_frags.ExtraActivity
-import com.uneatlantico.uneapp.Inicio.ham_frags.NotasActivity
-import com.uneatlantico.uneapp.Inicio.ham_frags.RegistroAsistenciaActivity
-import com.uneatlantico.uneapp.Inicio.ham_frags.SettingsActivity
+import com.uneatlantico.uneapp.Inicio.ham_frags.*
 import com.uneatlantico.uneapp.Inicio.navbar_frags.CampusFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.HorarioFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.InicioFragment
@@ -149,7 +146,7 @@ class InicioActivity : AppCompatActivity() {
             R.id.ham_notas -> hamActivitie = NotasActivity::class//openFragment(NotasFragment.newInstance())
             R.id.ham_registro_asistencias -> hamActivitie = RegistroAsistenciaActivity::class //openFragment(RegistroAsistenciaFragment.newInstance())
             R.id.ham_extra -> hamActivitie =ExtraActivity::class //openFragment(ExtraFragment.newInstance())
-            R.id.ham_settings ->hamActivitie =SettingsActivity::class //openFragment(SettingsFragment.newInstance())
+            R.id.ham_settings ->hamActivitie = SettingsActivity::class //openFragment(SettingsFragment.newInstance())
             else -> hamActivitie = SettingsActivity::class //openFragment(NotasFragment.newInstance())
         }
 

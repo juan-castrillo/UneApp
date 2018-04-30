@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="General"
-        android:key="pref_key_storage_settings">
-        <CheckBoxPreference
-            android:key="qr_default"
-            android:summary="Abrir por defecto pantalla de lectura QR"
-            android:title="Abrir por defecto"
-            android:defaultValue="false"/>
-        <Preference
-            android:key="a"
-            android:dependency="pref_key_auto_delete"
-            android:summary="a"
-            android:title="b"/>
-        <Preference
-            android:key="b"
-            android:dependency="pref_key_auto_delete"
-            android:summary="c"
-            android:title="d" />
-    </PreferenceCategory>
+    <CheckBoxPreference
+        android:key="checkbox"
+        android:summary="Tap to check if on or off"
+        android:title="Checkbox Preference" />
+    <EditTextPreference
+        android:dialogTitle="Enter a text"
+        android:key="text"
+        android:summary="Click to show a text entry dialog"
+        android:title="EditText Preference" />
+    <SwitchPreference
+        android:key="switch"
+        android:title="Switch Preference"
+        android:summary="Click to switch on or off"
+        android:defaultValue="true"/>
 </PreferenceScreen>

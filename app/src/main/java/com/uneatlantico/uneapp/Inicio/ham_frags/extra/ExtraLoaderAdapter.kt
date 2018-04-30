@@ -1,4 +1,4 @@
-package com.uneatlantico.uneapp.Inicio.ham_frags.recyview_act_reg
+package com.uneatlantico.uneapp.Inicio.ham_frags.extra
 
 import android.graphics.Color
 import android.support.v7.widget.AppCompatTextView
@@ -12,15 +12,11 @@ import android.widget.ImageView
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.estructuras_db.Registro
 
-
-/**
- * https://stackoverflow.com/questions/44714815/populate-sqlite-data-to-recyclerview-list
- */
-class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter.RegViewHolder> {
+class ExtraLoaderAdapter : RecyclerView.Adapter<ExtraLoaderAdapter.RegViewHolder> {
     private val mlec: List<Registro>
-    val onClickListener: RegistroAsistenciaAdapterListener
+    val onClickListener: ExtraLoaderAdapterListener
 
-    constructor(mlec: List<Registro>, listener: RegistroAsistenciaAdapterListener) {
+    constructor(mlec: List<Registro>, listener: ExtraLoaderAdapterListener) {
         this.mlec = mlec
         this.onClickListener = listener
     }
@@ -64,8 +60,9 @@ class RegistroAsistenciaAdapter : RecyclerView.Adapter<RegistroAsistenciaAdapter
         }
     }
 
-    interface RegistroAsistenciaAdapterListener {
+    interface ExtraLoaderAdapterListener {
         fun cardOnClick(v: View, position: Int)
     }
 
 }
+
