@@ -20,7 +20,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/navigationbar_margin">
 
             <!-- The ActionBar displayed at the top -->
             <include
@@ -62,7 +63,8 @@
             android:layout_gravity="start"
             android:background="@android:color/white"
             app:menu="@menu/drawer_view"
-            app:headerLayout="@layout/nav_header"/>
+            app:headerLayout="@layout/nav_header"
+            />
 
 
     </android.support.v4.widget.DrawerLayout>

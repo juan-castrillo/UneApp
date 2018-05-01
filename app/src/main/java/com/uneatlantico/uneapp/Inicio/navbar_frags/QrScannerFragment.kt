@@ -22,6 +22,7 @@ import android.widget.Toast
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.*
+import com.journeyapps.barcodescanner.camera.CameraSettings
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.WebViewActivity
 import com.uneatlantico.uneapp.db.PostSend
@@ -84,15 +85,15 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     private fun init(v: View) {
 
 
-        /*val s:CameraSettings = CameraSettings()
+        val s:CameraSettings = CameraSettings()
         s.isExposureEnabled = false
         s.isMeteringEnabled = false
-        s.isScanInverted = false
-        s.requestedCameraId = 2*/
+        //s.isScanInverted = false
+        s.requestedCameraId = 0
         //val nolosetampoco = CameraManager
         //val algo = CameraPreview(this.context).cameraSettings.
         barcodeScannerView = v.findViewById(R.id.zxing_barcode_scanner) as DecoratedBarcodeView
-        //barcodeScannerView.barcodeView.cameraSettings = s
+        barcodeScannerView.barcodeView.cameraSettings = s
         //barcodeScannerView.viewFinder.visibility = View.INVISIBLE
         barcodeScannerView.setStatusText(" ")
         val formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
@@ -121,7 +122,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         override fun barcodeResult(result: BarcodeResult) {
             barcodeScannerView.pause()
             barcodeScannerView.visibility = View.GONE
-            if (result.text == null || result.text == lastText) {
+            if (result.text == null) {
                 return
             }
             lastText = result.text
@@ -134,11 +135,9 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         when(v.id) {
             R.id.button -> {
 
-                if(checkWifiUneat()){
-                    lastText = null
-                    qrResponseImage.alpha = 0f
-                    barcodeScannerView.visibility = View.VISIBLE
-                    barcodeScannerView.resume()}
+                qrResponseImage.alpha = 0f
+                barcodeScannerView.visibility = View.VISIBLE
+                barcodeScannerView.resume()
 
             }
             else -> Log.d("holahola", "adioszxd")
