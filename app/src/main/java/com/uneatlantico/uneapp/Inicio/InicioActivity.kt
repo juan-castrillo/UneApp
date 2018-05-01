@@ -60,7 +60,7 @@ class InicioActivity : AppCompatActivity() {
     private val mHandler = Handler()
 
     /**
-     *
+     * https://github.com/umano/AndroidSlidingUpPanel
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -203,7 +203,10 @@ class InicioActivity : AppCompatActivity() {
      */
     private fun openFragment(fragment: Fragment) {
         fm.beginTransaction()
+                //.setCustomAnimations(R.anim.slide_in_bottom, 0)
                 .replace(R.id.container, fragment)
+                //.add(R.id.container, fragment)
+
                 //.addToBackStack(null)
                 .commit()
     }
