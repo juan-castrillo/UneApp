@@ -20,8 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginBottom="@dimen/navigationbar_margin">
+            android:orientation="vertical">
 
             <!-- The ActionBar displayed at the top -->
             <include
@@ -45,8 +44,8 @@
                 android:id="@+id/navigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:itemBackground = "@color/colorPrimaryDark"
+                android:background="@color/colorAccent"
+                android:itemBackground = "@color/colorPrimary"
                 app:menu="@menu/navigation"
                 />
 

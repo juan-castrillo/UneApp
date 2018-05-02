@@ -2,22 +2,26 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/negro</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:statusBarColor">#00000000</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/colorAccentDark</item>
     </style>
 
-    <style name="AppTheme.Launcher">
+    <style name="SplashLauncher">
         <item name="android:windowBackground">@drawable/splash_image</item>
+        <item name="android:navigationBarColor">@color/blancoPuro</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
         <item name="colorPrimaryDark">@android:color/white</item>
     </style>
 
     <style name="ham_Theme" parent="Theme.AppCompat.Light">
+        <item name="android:windowLightStatusBar">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:windowActionBar">true</item>
         <item name="windowActionBarOverlay">true</item>
@@ -25,6 +29,7 @@
         <item name="colorAccent">@color/negro</item>
         <item name="android:navigationBarColor">@color/negro</item>
         <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:textColor">@color/negro</item>
     </style>
 
