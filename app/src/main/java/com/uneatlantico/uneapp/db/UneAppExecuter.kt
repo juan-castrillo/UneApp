@@ -90,7 +90,7 @@ class UneAppExecuter{
             return registros
         }
 
-
+        //TODO tomar solo los 20 primeros registros
         fun recogerRegistros(ct: Context, idEvento: Int): ArrayList<Registro> {
             val registros = ArrayList<Registro>()
             //doAsync {

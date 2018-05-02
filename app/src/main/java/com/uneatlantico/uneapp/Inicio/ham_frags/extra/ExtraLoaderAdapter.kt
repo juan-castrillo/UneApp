@@ -28,19 +28,27 @@ class ExtraLoaderAdapter : RecyclerView.Adapter<ExtraLoaderAdapter.RegViewHolder
     }
 
     override fun onBindViewHolder(holder: RegViewHolder, position: Int) {
-        holder.textViewFecha.text = mlec[position].fecha
-        holder.textViewEvento.text = mlec[position].Evento
-        if(mlec[position].enviado == 0)
-            holder.card.setCardBackgroundColor(Color.argb(150,32,151,241))//holder.card.setCardBackgroundColor(getItemViewType(R.color.colorAccent))
-        else
-            holder.card.setCardBackgroundColor(Color.WHITE)
-
+        if(position < 20) {
+            holder.textViewFecha.text = mlec[position].fecha
+            holder.textViewEvento.text = mlec[position].Evento
+            if (mlec[position].enviado == 0)
+                holder.card.setCardBackgroundColor(Color.argb(150, 32, 151, 241))//holder.card.setCardBackgroundColor(getItemViewType(R.color.colorAccent))
+            else
+                holder.card.setCardBackgroundColor(Color.WHITE)
+        }
+        else{
+            holder.textViewEvento.text = "Pulse para mas"
+            //TODO centrar el textview y aumentar tamaño
+        }
         //holder.imageViewEnviado.setImageResource(R.drawable.tick_enviado)
     }
 
     override fun getItemCount(): Int {
         Log.d("nothing", mlec.size.toString())
-        return mlec.size
+        var size = mlec.size
+        if(size == 20)
+            size++
+        return size
     }
 
     inner class RegViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -62,6 +70,7 @@ class ExtraLoaderAdapter : RecyclerView.Adapter<ExtraLoaderAdapter.RegViewHolder
 
     interface ExtraLoaderAdapterListener {
         fun cardOnClick(v: View, position: Int)
+        //fun viewMore(v:View, position: Int)
     }
 
 }

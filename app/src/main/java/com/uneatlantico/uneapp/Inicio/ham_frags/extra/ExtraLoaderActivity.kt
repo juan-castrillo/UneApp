@@ -35,14 +35,19 @@ class ExtraLoaderActivity : AppCompatActivity() {
         val extraLoaderAdapter = ExtraLoaderAdapter(db, object : ExtraLoaderAdapter.ExtraLoaderAdapterListener {
             override fun cardOnClick(v: View, position: Int) {
                 doAsync {
-                    Log.d("contenidoCartaRegistro", v.eventoTextView.text.toString() + " " + v.fechaTextView.text.toString())
-                    if (v.card_view_registro.cardBackgroundColor != ColorStateList.valueOf(Color.WHITE))
-                        if(postSend.renviarWebService(listOf(v.eventoTextView.text.toString(), v.fechaTextView.text.toString()), applicationContext) == 1)
-                            v.card_view_registro.setCardBackgroundColor(Color.WHITE)
+                    if(position < 20) {
+                        Log.d("contenidoCartaRegistro", v.eventoTextView.text.toString() + " " + v.fechaTextView.text.toString())
+                        if (v.card_view_registro.cardBackgroundColor != ColorStateList.valueOf(Color.WHITE))
+                            if (postSend.renviarWebService(listOf(v.eventoTextView.text.toString(), v.fechaTextView.text.toString()), applicationContext) == 1)
+                                v.card_view_registro.setCardBackgroundColor(Color.WHITE)
+                    }
+                    else {//TODO cargas las materias que quedan
+                    }
                 }
             }
-            /*override fun iconImageViewOnClick(v: View, position: Int) {}
-            override fun iconImageUnFollowOnClick(v: View, position: Int) {}*/
+
+
+            /*override fun iconImageUnFollowOnClick(v: View, position: Int) {}*/
         })
         recyclerView.adapter = extraLoaderAdapter
 

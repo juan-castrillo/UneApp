@@ -28,13 +28,14 @@ class ExtraAdapter : RecyclerView.Adapter<ExtraAdapter.ExtraViewHolder> {
 
     override fun onBindViewHolder(holder: ExtraViewHolder, position: Int) {
         holder.textViewEvento.text = mlec[position].Evento
-        val progreso = (mlec[position].horasAlumno/mlec[position].horasEventoTotales)*100
+        val progreso = (mlec[position].horasAlumno / mlec[position].horasEventoTotales) * 100
         Log.d("progresoAsignatura", progreso.toString())
         holder.roundCornerProgressBar.progress = progreso
     }
 
     override fun getItemCount(): Int {
         Log.d("nothing", mlec.size.toString())
+
         return mlec.size
     }
 
@@ -53,8 +54,8 @@ class ExtraAdapter : RecyclerView.Adapter<ExtraAdapter.ExtraViewHolder> {
 
     interface ExtraAdapterListener {
         fun iconTextViewOnClick(v: View, position: Int)
-        /*fun iconImageViewOnClick(v: View, position: Int)
+        //fun viewMore(v: View, position: Int)
 
-        fun iconImageUnFollowOnClick(v: View, position: Int)*/
+        /*fun iconImageUnFollowOnClick(v: View, position: Int)*/
     }
 }

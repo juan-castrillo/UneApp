@@ -33,7 +33,7 @@ import kotlin.reflect.KClass
 
 class InicioActivity : AppCompatActivity() {
 
-    //Cuenta de google
+    //Menu lateral de hamburguesa
     //private lateinit var googleAccount: GoogleSignInAccount
     private lateinit var googleAccount: List<String>
     private lateinit var mName: TextView
