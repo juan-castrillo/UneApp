@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.uneatlantico.uneapp.Inicio.InicioActivity">
 
-
-
-    <android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/drawer_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-        <!-- This LinearLayout represents the contents of the screen  -->
+        <!--Contenedor menu superior-->
+
+
+        <!--Contenidos actividad Inicio-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <!-- The ActionBar displayed at the top -->
-            <include
-                layout="@layout/toolbar"
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
-
-            <!-- The main content view where fragments are loaded -->
+                android:background="?attr/colorPrimary">
+                <!-- The ActionBar displayed at the top -->
+                <include
+                    layout="@layout/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            <!--<android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|enterAlways|snap"/>-->
+        </android.support.design.widget.AppBarLayout>
+    <!-- The main content view where fragments are loaded -->
             <!--where fragments go-->
             <FrameLayout
                 android:id="@+id/container"
@@ -48,24 +52,24 @@
                 android:itemBackground = "@color/colorPrimary"
                 app:menu="@menu/navigation"
                 />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/zxing_transparent"
+            >
+
+            <FrameLayout
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:id="@+id/containeador"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@color/zxing_transparent"/>
 
         </LinearLayout>
 
+    </RelativeLayout>
 
-        <!-- The navigation drawer that comes from the left -->
-        <!-- Note that `android:layout_gravity` needs to be set to 'start' -->
-        <android.support.design.widget.NavigationView
-            android:id="@+id/nvView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="@android:color/white"
-            app:menu="@menu/drawer_view"
-            app:headerLayout="@layout/nav_header"
-            />
-
-
-    </android.support.v4.widget.DrawerLayout>
-
-</android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout >
