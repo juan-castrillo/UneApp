@@ -29,6 +29,7 @@ import kotlin.reflect.KClass
 import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_inicio.view.*
 
 
 class InicioActivity : AppCompatActivity() {
@@ -51,15 +52,12 @@ class InicioActivity : AppCompatActivity() {
     private val menuFragment = MenuFragment.newInstance()
     //private lateinit var lL:FrameLayout
     //variables para el menu hamburguesa lateral
-    /*private lateinit var mDrawerLayout: DrawerLayout
-    private lateinit var nvDrawer: NavigationView
-    private lateinit var toolbar: Toolbar
-    private lateinit var drawerToggle: ActionBarDrawerToggle*/
     private lateinit var toolbar: Toolbar
     //variables doble pulsacion para salir
     private var doubleBackToExitPressedOnce = false
     private val mHandler = Handler()
-
+    private lateinit var colorOverlay:LinearLayout
+    private lateinit var dissmissmenu:FrameLayout
     /**
      * https://github.com/umano/AndroidSlidingUpPanel
      */
@@ -69,15 +67,22 @@ class InicioActivity : AppCompatActivity() {
         //googleAccount = intent.extras.getParcelable("account")
         googleAccount = devolverUsuario(this)
         openFragment(inicioFragment)
-        //lL = findViewById(R.id.containeador)
+
         //Menu hamburguesa Ya implementado completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.title = " "
-
+        colorOverlay = findViewById(R.id.greycontainer)
+        //colorOverlay.dissmiss_menu.setOnClickListener { closeMenu() }
+        dissmissmenu = findViewById(R.id.dissmiss_menu)
+        dissmissmenu.setOnClickListener {
+            closeMenu()
+        }
         menuImageView = toolbar.findViewById(R.id.menuImage)
         menuImageView.setOnClickListener {
+
             dropMenu()
+            colorOverlay.alpha = 0.5F
         }
         //All sobre la barra de navegacion inferior
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation)
@@ -91,82 +96,12 @@ class InicioActivity : AppCompatActivity() {
     private fun dropMenu() {
         fm.beginTransaction()
                 .setCustomAnimations(R.anim.menu_down, 0)
-                .replace(R.id.containeador,menuFragment)
+                .replace(R.id.containeador,menuFragment, "menu")
                 //.add(R.id.container2, MenuFragment.newInstance())
                 //.addToBackStack(null)
                 .commit()
         Log.d("droppedmenu", "yes")
     }
-
-    private fun headerData() {
-        mName = headerView .findViewById(R.id.headerUserName)
-
-        mMail = headerView .findViewById(R.id.headerUserEmail)
-
-        mImage = headerView .findViewById(R.id.headerUserImage)
-
-        try{
-            mName.text = googleAccount[0]
-            mMail.text = googleAccount[1]
-            Picasso.with(this).load(googleAccount[2]).into(mImage)
-        }
-        catch (e:Exception){
-            Log.d("googleAccountVacio", e.message)
-        }
-    }
-
-    //private fun setupDrawerToggle(): ActionBarDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
-
-    /*override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        // Pass any configuration change to the drawer toggles
-        drawerToggle.onConfigurationChanged(newConfig)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(drawerToggle.onOptionsItemSelected(item))
-                return true
-        return super.onOptionsItemSelected(item)
-    }
-
-    /**
-     *
-     */
-    private fun setupDrawerContent(navigationView: NavigationView) {
-        navigationView.setNavigationItemSelectedListener { menuItem ->
-            selectDrawerItem(menuItem)
-            true
-        }
-    }
-
-    /**
-     * cambiar entre fragmentos mediante el menu de hamburguesa
-     */
-    fun selectDrawerItem(menuItem: MenuItem) {
-        // Create a new fragment and specify the fragment to show based on nav item clicked
-        var hamActivitie: KClass<*>
-        when (menuItem.itemId) {
-            R.id.ham_notas -> hamActivitie = NotasActivity::class//openFragment(NotasFragment.newInstance())
-            R.id.ham_registro_asistencias -> hamActivitie = RegistroAsistenciaActivity::class //openFragment(RegistroAsistenciaFragment.newInstance())
-            R.id.ham_extra -> hamActivitie =ExtraActivity::class //openFragment(ExtraFragment.newInstance())
-            R.id.ham_settings ->hamActivitie = SettingsActivity::class //openFragment(SettingsFragment.newInstance())
-            else -> hamActivitie = SettingsActivity::class //openFragment(NotasFragment.newInstance())
-        }
-
-        // Highlight the selected item has been done by NavigationView
-        menuItem.isChecked = true
-        // Set action bar title
-        //title = menuItem.title
-        // Close the navigation drawer
-        mDrawerLayout.closeDrawers()
-        ham_Launch(hamActivitie, menuItem.title.toString())
-    }*/
 
     private fun ham_Launch(ina: KClass<*>, ham_option_title:String) {
         val i = Intent(this, ina.java)
@@ -230,15 +165,19 @@ class InicioActivity : AppCompatActivity() {
             super.onBackPressed()
             return
         }
-        closeMenu()
-        this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this, "Presionar atrás de nuevo para salir", Toast.LENGTH_SHORT).show()
 
+        if(fm.findFragmentByTag("menu") == null) {
+            this.doubleBackToExitPressedOnce = true
+            Toast.makeText(this, "Presionar atrás de nuevo para salir", Toast.LENGTH_SHORT).show()
+        }
+        else closeMenu()
         mHandler.postDelayed(mRunnable, 1000)
     }
 
     private fun closeMenu() {
+
         fm.beginTransaction().setCustomAnimations(0,R.anim.menu_up).replace(R.id.containeador, Fragment()).commit()
+        colorOverlay.alpha = 0F
         //fm.beginTransaction().setCustomAnimations(R.anim.menu_up, 0).remove(menuFragment).commit()
     }
 

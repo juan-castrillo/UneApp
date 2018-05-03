@@ -22,4 +22,6 @@
     <dimen name="ic_album_overflow_margin_top">10dp</dimen>
     <dimen name= "textsize_registro_tarjeta_evento">20sp</dimen>
     <dimen name = "textsize_registro_tarjeta_fecha">12sp</dimen>
+    <dimen name="textsize_googlename">14sp</dimen>
+    <dimen name="textsize_googlemail">10sp</dimen>
 </resources>

@@ -7,8 +7,13 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import com.squareup.picasso.Picasso
 
 import com.uneatlantico.uneapp.R
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.devolverUsuario
+import org.w3c.dom.Text
 
 /**
  * A simple [Fragment] subclass.
@@ -20,9 +25,26 @@ import com.uneatlantico.uneapp.R
  *
  */
 class MenuFragment : Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private lateinit var menuGoogleUserName:TextView
+    private lateinit var menuGoogleUserEmail:TextView
+    private lateinit var menuGoogleUserImage:ImageView
 
-        return inflater.inflate(R.layout.fragment_menu, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val v = inflater.inflate(R.layout.fragment_menu, container, false)
+
+        menuGoogleUserName = v.findViewById(R.id.menuGoogleUserName)
+        menuGoogleUserEmail = v.findViewById(R.id.menuGoogleUserEmail)
+        menuGoogleUserImage = v.findViewById(R.id.menuGoogleUserImage)
+        initMenu()
+        return v
+    }
+
+    private fun initMenu() {
+        val usuario = devolverUsuario(this.context!!)
+        menuGoogleUserName.text = usuario[0] //nombre
+        menuGoogleUserEmail.text = usuario[1] //mail
+        Picasso.with(this.context).load(usuario[2]).into(menuGoogleUserImage)
+
     }
 
     companion object {
