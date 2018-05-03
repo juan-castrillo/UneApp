@@ -50,7 +50,7 @@ class InicioActivity : AppCompatActivity() {
     private var horarioFragment = HorarioFragment.newInstance()*/
     private val fm = supportFragmentManager
     private val menuFragment = MenuFragment.newInstance()
-    //private lateinit var lL:FrameLayout
+    private lateinit var fullmenu:FrameLayout
     //variables para el menu hamburguesa lateral
     private lateinit var toolbar: Toolbar
     //variables doble pulsacion para salir
@@ -72,6 +72,7 @@ class InicioActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.title = " "
+        fullmenu = findViewById(R.id.fullmenu)
         colorOverlay = findViewById(R.id.greycontainer)
         //colorOverlay.dissmiss_menu.setOnClickListener { closeMenu() }
         dissmissmenu = findViewById(R.id.dissmiss_menu)
@@ -80,7 +81,7 @@ class InicioActivity : AppCompatActivity() {
         }
         menuImageView = toolbar.findViewById(R.id.menuImage)
         menuImageView.setOnClickListener {
-
+            
             dropMenu()
             colorOverlay.alpha = 0.5F
         }
