@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#b4b9c1</color> <!--#b4b9c1-->
     <color name="colorAccent">#2097f1</color>
+    <color name="colorAccentDark">#007cf2</color>
     <color name="blancoPuro">#FFFFFF</color>
     <color name="blancoOscuro">#FAFAFA</color>
     <color name="viewBg">#f1f5f8</color>

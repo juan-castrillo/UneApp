@@ -15,9 +15,6 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.uneatlantico.uneapp.BottomNavigationViewComplements
 import com.uneatlantico.uneapp.Inicio.ham_frags.*
@@ -29,6 +26,9 @@ import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.devolverUsuario
 import kotlinx.android.synthetic.main.activity_inicio.*
 import kotlin.reflect.KClass
+import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
+import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+import android.widget.*
 
 
 class InicioActivity : AppCompatActivity() {
@@ -40,7 +40,7 @@ class InicioActivity : AppCompatActivity() {
     private lateinit var mImage: ImageView
     private lateinit var mMail: TextView
     private lateinit var headerView: View
-
+    private lateinit var menuImageView: ImageView
     //TODO eliminar estas variables
     //fragmentos para la barra de navegacion inferior
     private var inicioFragment = InicioFragment.newInstance()
@@ -48,13 +48,14 @@ class InicioActivity : AppCompatActivity() {
     private var qrScannerFragment = QrScannerFragment()
     private var horarioFragment = HorarioFragment.newInstance()*/
     private val fm = supportFragmentManager
-
+    private val menuFragment = MenuFragment.newInstance()
+    //private lateinit var lL:FrameLayout
     //variables para el menu hamburguesa lateral
-    private lateinit var mDrawerLayout: DrawerLayout
+    /*private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var nvDrawer: NavigationView
     private lateinit var toolbar: Toolbar
-    private lateinit var drawerToggle: ActionBarDrawerToggle
-
+    private lateinit var drawerToggle: ActionBarDrawerToggle*/
+    private lateinit var toolbar: Toolbar
     //variables doble pulsacion para salir
     private var doubleBackToExitPressedOnce = false
     private val mHandler = Handler()
@@ -68,24 +69,33 @@ class InicioActivity : AppCompatActivity() {
         //googleAccount = intent.extras.getParcelable("account")
         googleAccount = devolverUsuario(this)
         openFragment(inicioFragment)
-
-        //Ya implementada completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
+        //lL = findViewById(R.id.containeador)
+        //Menu hamburguesa Ya implementado completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        mDrawerLayout = findViewById(R.id.drawer_layout)
-        nvDrawer = findViewById(R.id.nvView)
-        setupDrawerContent(nvDrawer)
+        toolbar.title = " "
 
-        headerView = nvDrawer.getHeaderView(0)
-
-        headerData()
-        drawerToggle = setupDrawerToggle()
-        mDrawerLayout.addDrawerListener(drawerToggle)
-
+        menuImageView = toolbar.findViewById(R.id.menuImage)
+        menuImageView.setOnClickListener {
+            dropMenu()
+        }
         //All sobre la barra de navegacion inferior
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation)
         BottomNavigationViewComplements.removeShiftMode(bottomNavigationView)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
+
+    /**
+     * desplegates menu yes
+     */
+    private fun dropMenu() {
+        fm.beginTransaction()
+                .setCustomAnimations(R.anim.menu_down, 0)
+                .replace(R.id.containeador,menuFragment)
+                //.add(R.id.container2, MenuFragment.newInstance())
+                //.addToBackStack(null)
+                .commit()
+        Log.d("droppedmenu", "yes")
     }
 
     private fun headerData() {
@@ -105,10 +115,9 @@ class InicioActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupDrawerToggle(): ActionBarDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
+    //private fun setupDrawerToggle(): ActionBarDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close)
 
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
+    /*override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState()
@@ -157,7 +166,7 @@ class InicioActivity : AppCompatActivity() {
         // Close the navigation drawer
         mDrawerLayout.closeDrawers()
         ham_Launch(hamActivitie, menuItem.title.toString())
-    }
+    }*/
 
     private fun ham_Launch(ina: KClass<*>, ham_option_title:String) {
         val i = Intent(this, ina.java)
@@ -190,6 +199,8 @@ class InicioActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_horario -> {
+                //fm.beginTransaction().setCustomAnimations(R.anim.menu_down, 0).replace(R.id.containeador,menuFragment).commit()
+                //fm.beginTransaction().setCustomAnimations(R.anim.menu_down, 0).replace(R.id.containeador, HorarioFragment.newInstance()).commit()
                 //horarioFragment = HorarioFragment.newInstance()
                 openFragment(HorarioFragment.newInstance())
                 return@OnNavigationItemSelectedListener true
@@ -211,15 +222,6 @@ class InicioActivity : AppCompatActivity() {
                 .commit()
     }
 
-    /*private fun hideAllFragments(){
-        val transaction2 = fm.beginTransaction()
-        transaction2.hide(inicioFragment)
-        transaction2.hide(campusFragment)
-        transaction2.hide(qrScannerFragment)
-        transaction2.hide(horarioFragment)
-        transaction2.commit()
-    }*/
-
     /**
      * Preguntar al usuario si desea salir que pulse de nuevo al boton ATRAS
      */
@@ -228,11 +230,16 @@ class InicioActivity : AppCompatActivity() {
             super.onBackPressed()
             return
         }
-
+        closeMenu()
         this.doubleBackToExitPressedOnce = true
         Toast.makeText(this, "Presionar atrás de nuevo para salir", Toast.LENGTH_SHORT).show()
 
-        mHandler.postDelayed(mRunnable, 2000)
+        mHandler.postDelayed(mRunnable, 1000)
+    }
+
+    private fun closeMenu() {
+        fm.beginTransaction().setCustomAnimations(0,R.anim.menu_up).replace(R.id.containeador, Fragment()).commit()
+        //fm.beginTransaction().setCustomAnimations(R.anim.menu_up, 0).remove(menuFragment).commit()
     }
 
     private val mRunnable = Runnable { doubleBackToExitPressedOnce = false }

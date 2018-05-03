@@ -3,10 +3,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
-    android:layout_height="wrap_content"
+    android:layout_height="56dp"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
-    android:elevation="4dp"
-    app:theme="@style/Theme.AppCompat.Light"
+    android:elevation="0dp"
+    app:layout_scrollFlags="scroll|enterAlways"
     android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/menuImage"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:src="@drawable/ic_menu_black_48dp"
+
+            />
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="75dp"
+
+            android:gravity="center_vertical"
+            android:text="UneApp"
+            android:textColor="@color/negro"
+            android:textSize="27sp" />
+    </LinearLayout>
+
 </android.support.v7.widget.Toolbar>
