@@ -9,6 +9,7 @@ import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.getRegistro
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.idEventoPorNombre
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.insertarProgreso
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.saveRegistroInDB
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.ultimoRegistro
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.updateProgreso
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.updateRegistro
 import com.uneatlantico.uneapp.db.estructuras_db.Progreso
@@ -35,19 +36,46 @@ class PostSend{
      * Manda el registro al webservice y lo inserta en la base de datos
      */
     fun registrarAlumno(listaQR:List<String>, ct:Context){
-        doAsync {
-            Log.d("registraralumno", "entro")
-            val miListaTemp: List<String> = initiateList(listaQR, ct)//.toMutableList()
+        Log.d("registraralumno", "entro")
+        //checkNoDeslog(ct, listaQR)
+        val miListaTemp: List<String> = initiateList(listaQR, ct)//.toMutableList()
 
-            val enviado = sendPostRequest(miListaTemp, ct)
+        val enviado = sendPostRequest(miListaTemp, ct)
 
-            //creo la lista para Insertar en db
-            val listaEspecificaInsert: List<String> = listOf(miListaTemp[1], miListaTemp[2], enviado.toString(), estadoDB(miListaTemp[3].toInt()).toString())
-            saveRegistroInDB(listaEspecificaInsert, ct)
+        //creo la lista para Insertar en db
+        val listaEspecificaInsert: List<String> = listOf(miListaTemp[1], miListaTemp[2], enviado.toString(), estadoDB(miListaTemp[3].toInt()).toString())
+        saveRegistroInDB(listaEspecificaInsert, ct)
 
-            Log.d("registraralumno", miListaTemp.toString())
-        }
+        Log.d("registraralumno", miListaTemp.toString())
+
     }
+    fun crearRegistro(listaQR:List<String>, ct:Context){
+        Log.d("registraralumno", "entro")
+        //checkNoDeslog(ct, listaQR)
+        val miListaTemp: List<String> = initiateList(listaQR, ct, "0")//.toMutableList()
+
+        val enviado = sendPostRequest(miListaTemp, ct)
+
+        //creo la lista para Insertar en db
+        val listaEspecificaInsert: List<String> = listOf(miListaTemp[1], miListaTemp[2], enviado.toString(), estadoDB(miListaTemp[3].toInt()).toString())
+        saveRegistroInDB(listaEspecificaInsert, ct)
+
+        Log.d("registraralumno", miListaTemp.toString())
+
+    }
+    /**
+     * Si un usuario se ha quedado logueado en un evento desloguearlo sin verificacion y loguearlo en el nuevo
+     */
+    /*private fun checkNoDeslog(ct:Context, listaQR: List<String>):Int {
+        var validado = 1
+        val ultimoRegistro = ultimoRegistro(ct)
+        if(ultimoRegistro.idEvento.toString() != listaQR[0]) //idEvento
+            if(ultimoRegistro.estado == 1){ //fecha
+                //TODO mandar a insertar un registro sin validar y preguntar al usuario
+                validado = 0
+            }
+        return validado
+    }*/
 
     /**
      * consigue el idPersona de la cuenta de google
@@ -70,34 +98,25 @@ class PostSend{
         return estadoKul
     }
 
-    /*fun estado(ct:Context, idEvento:Int, fecha: String):Int{
-        val db:Int = RegistrosDataBase(ct).estadoUltimo(idEvento, fecha)
-        var estado:Int
-        when(db){
-            1 -> {
-                estado = 0
-            }
-            0 -> {
-                estado = 1
-            }
-            else -> {
-                estado = 1
-            }
-        }
-        return estado
-    }*/
-
     /**
      * creo una lista con idPersona, idEvento, fecha, espar
      */
-    fun initiateList(listaQR:List<String>, ct:Context):List<String>{
-        val fecha = formatfecha(listaQR[1])
-        val espar = estadoUltimo(ct ,listaQR[0].toInt(), formatfecha(listaQR[1], false)).toString()
+    fun initiateList(listaQR:List<String>, ct:Context, validado:String ="1"):List<String>{
+        var fecha:String
+        var espar:String
+        if(validado != "0") {
+            fecha = formatfecha(listaQR[1])
+            espar = estadoUltimo(ct ,listaQR[0].toInt(), formatfecha(listaQR[1], false)).toString()
+        }
+        else {
+            fecha = listaQR[1]
+            espar = estadoUltimo(ct, listaQR[0].toInt(), fecha).toString()
+        }
         val listaInsert:List<String> =
                 listOf(idPersona(ct),
                         listaQR[0],
                         fecha,
-                        (espar))//estado(ct, listaQR[0].toInt(), fecha).toString())
+                        (espar), validado)//estado(ct, listaQR[0].toInt(), fecha).toString())
 
         return listaInsert
     }
@@ -147,7 +166,7 @@ class PostSend{
             jsonParam.put("idEvento", postList[1])
             jsonParam.put("fecha", postList[2])
             jsonParam.put("valido", true)
-            jsonParam.put("validado", 1)
+            jsonParam.put("validado", postList[4].toInt())
             jsonParam.put("tipoRegistro", "Alumno")
             jsonParam.put("esPar", toBoolean(postList[3]))
 
@@ -180,8 +199,9 @@ class PostSend{
                         if(postList[1].toInt() == 220 || postList[1].toInt() == 221)
                             horasTotales = 20.0F
                         else {
-                            val horasArray2 = jsonObject.get("horasTotales") as JSONArray
-                            horasTotales = (horasArray2.getJSONObject(0).getDouble("horas")).toFloat()
+                            horasTotales = 60.0F
+                            /*val horasArray2 = jsonObject.get("horasTotales") as JSONArray
+                            horasTotales = (horasArray2.getJSONObject(0).getDouble("horas")).toFloat()*/
                         }
                     }
                     catch (e:Exception){}

@@ -27,11 +27,12 @@ class ExtraLoaderActivity : AppCompatActivity() {
         val evento = intent.getStringExtra("evento")
         val idEvento = idEventoPorNombre(this, evento)
         estadoUltimo(this, idEvento )
-        //Log.d("idEvento", idEvento.toString())
+
         val db = recogerRegistros(this, idEvento)
         recyclerView = findViewById(R.id.extra_materia_recycler)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
+
         val extraLoaderAdapter = ExtraLoaderAdapter(db, object : ExtraLoaderAdapter.ExtraLoaderAdapterListener {
             override fun cardOnClick(v: View, position: Int) {
                 doAsync {

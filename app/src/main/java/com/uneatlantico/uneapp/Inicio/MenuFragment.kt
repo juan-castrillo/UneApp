@@ -26,6 +26,7 @@ import com.uneatlantico.uneapp.Inicio.ham_frags.ExtraActivity
 import com.uneatlantico.uneapp.Inicio.ham_frags.NotasActivity
 import com.uneatlantico.uneapp.Inicio.ham_frags.RegistroAsistenciaActivity
 import com.uneatlantico.uneapp.Inicio.ham_frags.SettingsActivity
+import com.uneatlantico.uneapp.Inicio.ham_frags.extra.ExtraLoaderActivity
 import kotlin.reflect.KClass
 
 
@@ -45,7 +46,8 @@ class MenuFragment : BottomSheetDialogFragment() {
     private lateinit var asistenciaPress:LinearLayout
     private lateinit var notasPress:LinearLayout
     //private lateinit var campusPress:LinearLayout
-    //private lateinit var HorarioPress:LinearLayout
+    private lateinit var horarioPress:LinearLayout
+    //private lateinit var settingsPress:LinearLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_menu, container, false)
@@ -55,20 +57,25 @@ class MenuFragment : BottomSheetDialogFragment() {
         menuGoogleUserImage = v.findViewById(R.id.menuGoogleUserImage)
         asistenciaPress = v.findViewById(R.id.Asistencia)
         asistenciaPress.setOnClickListener{
-            getActivity()!!.getSupportFragmentManager().beginTransaction().remove(this).commit();
+            activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
             Launch(ExtraActivity::class, "Asistencias")
         }
         notasPress = v.findViewById(R.id.Notas)
         notasPress.setOnClickListener {
-            activity!!.onBackPressed()
+            activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
             Launch(NotasActivity::class, "Notas")
+        }
+        horarioPress = v.findViewById(R.id.Horario)
+        horarioPress.setOnClickListener {
+            activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
+            Launch(RegistroAsistenciaActivity::class, "Asistencias2")
         }
         initMenu()
         return v
     }
 
 
-    fun selectDrawerItem(menuItem: MenuItem) {
+    /*fun selectDrawerItem(menuItem: MenuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         var hamActivitie: KClass<*>
         when (menuItem.itemId) {
@@ -85,7 +92,7 @@ class MenuFragment : BottomSheetDialogFragment() {
         // Close the navigation drawer
 
         Launch(hamActivitie, menuItem.title.toString())
-    }
+    }*/
 
     private fun Launch(ina: KClass<*>, ham_option_title:String) {
         val i = Intent(this.context, ina.java)

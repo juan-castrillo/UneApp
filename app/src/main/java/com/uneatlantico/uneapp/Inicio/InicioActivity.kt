@@ -67,62 +67,34 @@ class InicioActivity : AppCompatActivity() {
         //googleAccount = intent.extras.getParcelable("account")
         googleAccount = devolverUsuario(this)
         openFragment(inicioFragment)
-        val bottomSheet = findViewById<View>(R.id.bottom_sheet)
-        /*bottomSheetB = BottomSheetBehavior.from(bottomSheet)
-        bottomSheetB.setState(BottomSheetBehavior.STATE_EXPANDED);*/
+
         bottomSheetFragment = MenuFragment()
-        bottomSheetFragment.show(fm, bottomSheetFragment.tag)
+        //bottomSheetFragment.show(fm, bottomSheetFragment.tag)
 
-        /*bottomSheet.scaleY = 200F
-        bottomSheet.scaleX = 200F*/
 
-        //bottomSheet.showWithSheetView(LayoutInflater.from(this).inflate(R.layout.fragment_menu, bottomSheet, false))
-        //bottomSheet.showWithSheetView(menuFragment.view)
-        //findViewById(R.id.).setOnClickListener(View.OnClickListener { MenuFragment().show(supportFragmentManager, R.id.bottomsheet) })
         //Menu hamburguesa Ya implementado completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.title = " "
-        /*fullmenu = findViewById(R.id.fullmenu)
-        colorOverlay = findViewById(R.id.greycontainer)
-        //colorOverlay.dissmiss_menu.setOnClickListener { closeMenu() }
-        dissmissmenu = findViewById(R.id.dissmiss_menu)
 
-        dissmissmenu.setOnClickListener {
-            //closeMenu()
-        }*/
         menuImageView = toolbar.findViewById(R.id.menuImage)
         menuImageView.setOnClickListener {
             bottomSheetFragment.show(fm, bottomSheetFragment.tag)
-            // bottomSheet.showWithSheetView(it)
-            //MenuFragment().show(fm, R.id.bottomsheet)/*dropMenu()
-            //colorOverlay.alpha = 0.5F*/
         }
+
         //All sobre la barra de navegacion inferior
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation)
         BottomNavigationViewComplements.removeShiftMode(bottomNavigationView)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-    /**
-     * desplegates menu yes
-     */
-    /*private fun dropMenu() {
-        fm.beginTransaction()
-                .setCustomAnimations(R.anim.menu_down, 0)
-                .replace(R.id.containeador,menuFragment, "menu")
-                //.add(R.id.container2, MenuFragment.newInstance())
-                //.addToBackStack(null)
-                .commit()
-        Log.d("droppedmenu", "yes")
-    }*/
 
-    private fun ham_Launch(ina: KClass<*>, ham_option_title:String) {
+    /*private fun ham_Launch(ina: KClass<*>, ham_option_title:String) {
         val i = Intent(this, ina.java)
         i.putExtra("title", ham_option_title)
         //finish()  //Kill the activity from which you will go to next activity
         startActivityForResult(i, 0)
-    }
+    }*/
 
     /**
      *  cambiar entre fragmentos mediante la barra de navegacion inferior

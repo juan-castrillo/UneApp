@@ -26,7 +26,9 @@ import com.journeyapps.barcodescanner.camera.CameraSettings
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.WebViewActivity
 import com.uneatlantico.uneapp.db.PostSend
+import com.uneatlantico.uneapp.db.UneAppExecuter
 import kotlinx.android.synthetic.main.fragment_qr_scanner.*
+import org.jetbrains.anko.doAsync
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -190,6 +192,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
                 qrResponseImage.setImageResource(R.drawable.tick_enviado)
                 qr_recibido_imagen.alpha = 1f
+
                 insertarRegistroQr(listaQR)
             }
 
@@ -262,8 +265,27 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         return dateFormat.format(date)
     }
 
-    private fun insertarRegistroQr(listaQR:List<String>){
-        PostSend(listaQR, this.context!!)
+    private fun insertarRegistroQr(listaQR:List<String>) {
+        val ct = this.context!!
+        val post = PostSend()
+        doAsync {
+            val ultimoRegistro = UneAppExecuter.ultimoRegistro(ct)
+            Log.d("check1", ultimoRegistro.idEvento.toString() + " != " + listaQR[0])
+            if (ultimoRegistro.idEvento.toString() != listaQR[0]) {//idEvento
+                if (ultimoRegistro.estado == 1) { //fecha
+                    //TODO mandar a insertar un registro sin validar y preguntar al usuario
+                    post.crearRegistro(listOf(ultimoRegistro.idEvento.toString(), ultimoRegistro.fecha), ct)
+                    post.registrarAlumno(listaQR, ct)
+                }
+                else{
+                    post.registrarAlumno(listaQR, ct)
+                }
+            }
+            else {
+                PostSend(listaQR, ct)
+                Log.d("vine aca", "y no hice nada")
+            }
+        }
     }
 
 

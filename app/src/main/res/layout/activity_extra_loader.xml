@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Inicio.ham_frags.extra.ExtraLoaderActivity">
+    tools:context=".Inicio.ham_frags.extra.ExtraLoaderActivity"
+    android:background="@color/blancoPuro">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/extra_materia_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/actionbar_status_margin"
+        android:layout_marginTop="@dimen/actionbar_margin"
         />
 
 </android.support.constraint.ConstraintLayout>

@@ -98,7 +98,7 @@ class UneAppExecuter{
             val db = UneAppDB(ct).readableDatabase
             lateinit var cursor: Cursor
             try {
-                val sql = "select fecha, enviado, nombreEvento from registros inner join Eventos on registros.idEvento = eventos._id where idEvento = '$idEvento'  ORDER BY fecha desc"
+                val sql = "select fecha, enviado, nombreEvento from registros inner join Eventos on registros.idEvento = eventos._id where idEvento = '$idEvento'  ORDER BY fecha desc LIMIT 20"
                 cursor = db.rawQuery(sql, null)
                 //Log.d("sqlExtraRegistro", sql)
             } catch (e: Exception) {
@@ -156,6 +156,29 @@ class UneAppExecuter{
             db.close()
             //}
             return estado
+        }
+
+
+        fun ultimoRegistro(ct: Context):Registro{
+            var registro:Registro = Registro()
+            val db = UneAppDB(ct).readableDatabase
+            try {
+                val cursor = db.rawQuery("select * from registros ORDER BY _id DESC LIMIT 1", null)
+
+                if (cursor.moveToFirst()) {
+                    val estado = cursor.getInt(cursor.getColumnIndex("estado"))
+                    val idEvento = cursor.getInt(cursor.getColumnIndex("idEvento"))
+                    val fecha = cursor.getString(cursor.getColumnIndex("fecha"))
+                    Log.d("estado", estado.toString())
+                    registro = Registro(estado = estado, idEvento = idEvento, fecha = fecha)
+                }
+
+                cursor.close()
+            } catch (e: Exception) {
+                Log.d("error consiguiendo ultimo registro", e.message)
+            }
+            db.close()
+            return registro
         }
 
         /**

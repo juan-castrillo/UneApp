@@ -38,6 +38,12 @@ class ExtraLoaderAdapter : RecyclerView.Adapter<ExtraLoaderAdapter.RegViewHolder
         }
         else{
             holder.textViewEvento.text = "Pulse para mas"
+            holder.textViewEvento.textSize = 12F
+            //holder.textViewEvento
+            holder.textViewEvento.gravity = 1
+            holder.textViewFecha.height = 0
+            holder.card.elevation = 0F
+            //holder.textViewEvento
             //TODO centrar el textview y aumentar tamaño
         }
         //holder.imageViewEnviado.setImageResource(R.drawable.tick_enviado)
