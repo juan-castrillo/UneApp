@@ -2,6 +2,7 @@ package com.uneatlantico.uneapp.Inicio
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -28,6 +29,9 @@ import com.uneatlantico.uneapp.Inicio.ham_frags.RegistroAsistenciaActivity
 import com.uneatlantico.uneapp.Inicio.ham_frags.SettingsActivity
 import com.uneatlantico.uneapp.Inicio.ham_frags.extra.ExtraLoaderActivity
 import kotlin.reflect.KClass
+import android.util.DisplayMetrics
+
+
 
 
 /**
@@ -106,7 +110,7 @@ class MenuFragment : BottomSheetDialogFragment() {
 
         if (dialog != null) {
             val bottomSheet = dialog.findViewById<View>(R.id.design_bottom_sheet)
-            bottomSheet.layoutParams.height = 1000
+            bottomSheet.layoutParams.height = convertDpToPixel(350F)
         }
         val view = view
         view!!.post {
@@ -126,6 +130,12 @@ class MenuFragment : BottomSheetDialogFragment() {
         menuGoogleUserEmail.text = usuario[1] //mail
         Picasso.with(this.context).load(usuario[2]).into(menuGoogleUserImage)
 
+    }
+
+    fun convertDpToPixel(dp: Float): Int {
+        val metrics = Resources.getSystem().getDisplayMetrics()
+        val px = dp * (metrics.densityDpi / 160f)
+        return Math.round(px)
     }
 
     companion object {
