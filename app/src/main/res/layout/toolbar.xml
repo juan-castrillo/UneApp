@@ -7,13 +7,22 @@
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
     android:elevation="0dp"
+    android:contentInsetLeft="0dp"
+    android:contentInsetStart="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    android:contentInsetRight="0dp"
+    android:contentInsetEnd="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetEnd="0dp"
     app:layout_scrollFlags="scroll|enterAlways"
     android:background="@color/colorPrimary">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:layout_marginLeft="-200dp"
+        >
 
         <ImageView
             android:id="@+id/menuImage"
@@ -21,6 +30,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:clickable="true"
+            android:layout_marginLeft="16dp"
             android:focusable="true"
             android:src="@drawable/ic_menu_black_48dp"
 
@@ -30,13 +40,13 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
-            android:layout_gravity="center_horizontal"
+
+            android:layout_gravity="center"
 
 
             android:text="UneApp"
             android:textColor="@color/negro"
             android:textSize="27sp" />
-    </LinearLayout>
+    </FrameLayout>
 
 </android.support.v7.widget.Toolbar>

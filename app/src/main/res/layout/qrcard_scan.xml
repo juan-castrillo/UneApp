@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+
+    app:behavior_peekHeight="56dp"
+    android:orientation="vertical"
+    android:elevation="8dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/accent_round_corners"
+        >
+        <FrameLayout
+            android:layout_centerInParent="true"
+            android:layout_width="35dp"
+            android:layout_height="4dp"
+            android:background="@drawable/white_round_cornersfull"/>
+    </RelativeLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+        <com.journeyapps.barcodescanner.DecoratedBarcodeView
+            android:layout_width="match_parent"
+            android:id="@+id/qr_slide_scanner"
+            android:layout_height="400dp"
+            android:padding="8dp"
+            app:zxing_preview_scaling_strategy="centerCrop"
+            app:zxing_use_texture_view="true" />
+    </FrameLayout>
+
+</LinearLayout>

@@ -90,6 +90,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         val s:CameraSettings = CameraSettings()
         s.isExposureEnabled = false
         s.isMeteringEnabled = false
+
         //s.isScanInverted = false
         s.requestedCameraId = 0
         //val nolosetampoco = CameraManager

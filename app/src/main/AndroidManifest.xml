@@ -42,7 +42,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/SplashLauncher"
+            android:theme="@style/AppTheme.SplashLauncher"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
