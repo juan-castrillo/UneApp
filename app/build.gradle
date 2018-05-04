@@ -49,5 +49,7 @@ dependencies {
     implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     implementation "com.android.support:support-compat:$api_version"
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation 'com.flipboard:bottomsheet-core:1.5.3'
+    implementation 'com.flipboard:bottomsheet-commons:1.5.3'
 }
 apply plugin: 'com.google.gms.google-services'
