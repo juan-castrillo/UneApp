@@ -5,6 +5,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetDialogFragment
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.widget.DrawerLayout
@@ -13,6 +15,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import com.squareup.picasso.Picasso
@@ -29,6 +32,8 @@ import kotlin.reflect.KClass
 import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.widget.*
+import com.flipboard.bottomsheet.BottomSheetLayout
+import com.flipboard.bottomsheet.commons.BottomSheetFragment
 import kotlinx.android.synthetic.main.activity_inicio.view.*
 
 
@@ -45,19 +50,14 @@ class InicioActivity : AppCompatActivity() {
     //TODO eliminar estas variables
     //fragmentos para la barra de navegacion inferior
     private var inicioFragment = InicioFragment.newInstance()
-    /*private var campusFragment = CampusFragment.newInstance()
-    private var qrScannerFragment = QrScannerFragment()
-    private var horarioFragment = HorarioFragment.newInstance()*/
     private val fm = supportFragmentManager
     private val menuFragment = MenuFragment.newInstance()
-    private lateinit var fullmenu:RelativeLayout
-    //variables para el menu hamburguesa lateral
     private lateinit var toolbar: Toolbar
-    //variables doble pulsacion para salir
     private var doubleBackToExitPressedOnce = false
     private val mHandler = Handler()
-    private lateinit var colorOverlay:LinearLayout
-    private lateinit var dissmissmenu:FrameLayout
+    private lateinit var bottomSheetFragment:BottomSheetDialogFragment
+    private lateinit var bottomSheetB:BottomSheetBehavior<*>
+
     /**
      * https://github.com/umano/AndroidSlidingUpPanel
      */
@@ -67,22 +67,36 @@ class InicioActivity : AppCompatActivity() {
         //googleAccount = intent.extras.getParcelable("account")
         googleAccount = devolverUsuario(this)
         openFragment(inicioFragment)
+        val bottomSheet = findViewById<View>(R.id.bottom_sheet)
+        /*bottomSheetB = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetB.setState(BottomSheetBehavior.STATE_EXPANDED);*/
+        bottomSheetFragment = MenuFragment()
+        bottomSheetFragment.show(fm, bottomSheetFragment.tag)
 
+        /*bottomSheet.scaleY = 200F
+        bottomSheet.scaleX = 200F*/
+
+        //bottomSheet.showWithSheetView(LayoutInflater.from(this).inflate(R.layout.fragment_menu, bottomSheet, false))
+        //bottomSheet.showWithSheetView(menuFragment.view)
+        //findViewById(R.id.).setOnClickListener(View.OnClickListener { MenuFragment().show(supportFragmentManager, R.id.bottomsheet) })
         //Menu hamburguesa Ya implementado completamente https://github.com/codepath/android_guides/wiki/Fragment-Navigation-Drawer
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.title = " "
-        fullmenu = findViewById(R.id.fullmenu)
+        /*fullmenu = findViewById(R.id.fullmenu)
         colorOverlay = findViewById(R.id.greycontainer)
         //colorOverlay.dissmiss_menu.setOnClickListener { closeMenu() }
         dissmissmenu = findViewById(R.id.dissmiss_menu)
+
         dissmissmenu.setOnClickListener {
-            closeMenu()
-        }
+            //closeMenu()
+        }*/
         menuImageView = toolbar.findViewById(R.id.menuImage)
         menuImageView.setOnClickListener {
-            dropMenu()
-            colorOverlay.alpha = 0.5F
+            bottomSheetFragment.show(fm, bottomSheetFragment.tag)
+            // bottomSheet.showWithSheetView(it)
+            //MenuFragment().show(fm, R.id.bottomsheet)/*dropMenu()
+            //colorOverlay.alpha = 0.5F*/
         }
         //All sobre la barra de navegacion inferior
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation)
@@ -93,7 +107,7 @@ class InicioActivity : AppCompatActivity() {
     /**
      * desplegates menu yes
      */
-    private fun dropMenu() {
+    /*private fun dropMenu() {
         fm.beginTransaction()
                 .setCustomAnimations(R.anim.menu_down, 0)
                 .replace(R.id.containeador,menuFragment, "menu")
@@ -101,7 +115,7 @@ class InicioActivity : AppCompatActivity() {
                 //.addToBackStack(null)
                 .commit()
         Log.d("droppedmenu", "yes")
-    }
+    }*/
 
     private fun ham_Launch(ina: KClass<*>, ham_option_title:String) {
         val i = Intent(this, ina.java)
@@ -166,20 +180,20 @@ class InicioActivity : AppCompatActivity() {
             return
         }
 
-        if(fm.findFragmentByTag("menu") == null) {
+        //if(fm.findFragmentByTag("menu") == null) {
             this.doubleBackToExitPressedOnce = true
             Toast.makeText(this, "Presionar atrás de nuevo para salir", Toast.LENGTH_SHORT).show()
-        }
-        else closeMenu()
+        //}
+        //else closeMenu()
         mHandler.postDelayed(mRunnable, 1000)
     }
 
-    private fun closeMenu() {
+    /*private fun closeMenu() {
 
         fm.beginTransaction().setCustomAnimations(0,R.anim.menu_up).replace(R.id.containeador, Fragment()).commit()
         colorOverlay.alpha = 0F
         //fm.beginTransaction().setCustomAnimations(R.anim.menu_up, 0).remove(menuFragment).commit()
-    }
+    }*/
 
     private val mRunnable = Runnable { doubleBackToExitPressedOnce = false }
 
