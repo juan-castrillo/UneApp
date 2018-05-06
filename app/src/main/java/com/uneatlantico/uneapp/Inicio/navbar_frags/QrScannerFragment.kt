@@ -43,13 +43,13 @@ import kotlin.collections.ArrayList
  * Use the [QrScannerFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class QrScannerFragment : Fragment(), View.OnClickListener {
+class QrScannerFragment : Fragment(){
 
-    private lateinit var capture: CaptureManager
+    /*private lateinit var capture: CaptureManager
     private lateinit var barcodeScannerView: DecoratedBarcodeView
     private lateinit var qrResponseImage: ImageView
     private var lastText: String? = null
-    private lateinit var b: Button
+    private lateinit var b: Button*/
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -57,11 +57,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
         val v = inflater.inflate(R.layout.fragment_qr_scanner, container, false)
 
-        b = v.findViewById(R.id.button) as Button
-        b.setOnClickListener(this)
-        qrResponseImage = v.findViewById(R.id.qr_recibido_imagen) as ImageView
-        qrResponseImage.setImageResource(R.drawable.tick_enviado)
-        qrResponseImage.alpha = 0f
+
 
         //checkWifiUneat()
         init(v)
@@ -87,6 +83,12 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
     private fun init(v: View) {
 
 
+        /*b = v.findViewById(R.id.button) as Button
+        b.setOnClickListener(this)
+        qrResponseImage = v.findViewById(R.id.qr_recibido_imagen) as ImageView
+        qrResponseImage.setImageResource(R.drawable.tick_enviado)
+        qrResponseImage.alpha = 0f
+
         val s:CameraSettings = CameraSettings()
         s.isExposureEnabled = false
         s.isMeteringEnabled = false
@@ -101,7 +103,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
         barcodeScannerView.setStatusText(" ")
         val formats = Arrays.asList(BarcodeFormat.QR_CODE, BarcodeFormat.CODE_39)
         barcodeScannerView.barcodeView.decoderFactory = DefaultDecoderFactory(formats)
-        barcodeScannerView.decodeContinuous(callback)
+        barcodeScannerView.decodeContinuous(callback)*/
 
 
         //barcodeScannerView.barcodeView.cameraDistance = 100.0f
@@ -109,7 +111,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
 
     }
 
-    override fun onResume() {
+    /*/override fun onResume() {
         super.onResume()
 
         barcodeScannerView.resume()
@@ -145,7 +147,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             }
             else -> Log.d("holahola", "adioszxd")
         }
-    }
+    }*/
 
     //TODO llamar a este metodo
     fun checkWifiUneat():Boolean{
@@ -191,8 +193,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             if(comprobarFecha(fecha) && checkWifiUneat()) {
                 val listaQR: List<String> = listOf(idEvento, fecha)
 
-                qrResponseImage.setImageResource(R.drawable.tick_enviado)
-                qr_recibido_imagen.alpha = 1f
+
 
                 insertarRegistroQr(listaQR)
             }
@@ -200,8 +201,7 @@ class QrScannerFragment : Fragment(), View.OnClickListener {
             //TODO poner imagen con una x
             else {
                 mensaje("QR expirado", "QR respuesta")
-                qrResponseImage.setImageResource(R.drawable.red_cross)
-                qr_recibido_imagen.alpha = 1f
+
             }
         }
 

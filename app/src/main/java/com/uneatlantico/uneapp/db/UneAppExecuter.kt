@@ -90,6 +90,48 @@ class UneAppExecuter{
             return registros
         }
 
+        fun recogerFechasEvento(ct: Context, idEvento: Int):List<String>{
+            var fechas:List<String> = emptyList()
+            //doAsync {
+            //Log.d("rutaDB", DB_PATH)
+            val db = UneAppDB(ct).readableDatabase
+            lateinit var cursor: Cursor
+            try {
+                val sql = "select fecha from registros where idEvento = '$idEvento' and estado = 0 ORDER BY fecha desc LIMIT 20"
+                cursor = db.rawQuery(sql, null)
+                //Log.d("sqlExtraRegistro", sql)
+            } catch (e: Exception) {
+                Log.d("queryRecogerAll", e.message)
+            }
+            try {
+                //var id: Int
+                var Evento: String
+                var fecha: String
+                //var estado: Int
+                var enviado: Int
+                if (cursor.moveToFirst()) {
+                    var i = 0
+                    while (!cursor.isAfterLast) {
+                        //id = cursor.getInt(cursor.getColumnIndex("_id"))
+                        //Evento = cursor.getString(cursor.getColumnIndex("nombreEvento"))
+                        fecha = cursor.getString(cursor.getColumnIndex("fecha"))
+                        //estado = cursor.getInt(cursor.getColumnIndex("estado"))
+                        //enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
+
+                        //fechas = fecha
+                        cursor.moveToNext()
+                    }
+                }
+            } catch (x: Exception) {
+                Log.d("asignacionRecogerAll", x.message)
+            }
+            cursor.close()
+            db.close()
+
+
+            return fechas
+        }
+
         //TODO tomar solo los 20 primeros registros
         fun recogerRegistros(ct: Context, idEvento: Int): ArrayList<Registro> {
             val registros = ArrayList<Registro>()

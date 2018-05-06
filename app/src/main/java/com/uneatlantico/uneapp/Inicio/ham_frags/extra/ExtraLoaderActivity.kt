@@ -12,7 +12,9 @@ import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.PostSend
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.estadoUltimo
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.idEventoPorNombre
+import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.recogerFechasEvento
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.recogerRegistros
+import com.uneatlantico.uneapp.db.estructuras_db.Registro
 import kotlinx.android.synthetic.main.small_card_layout.view.*
 import org.jetbrains.anko.doAsync
 
@@ -28,12 +30,12 @@ class ExtraLoaderActivity : AppCompatActivity() {
         val idEvento = idEventoPorNombre(this, evento)
         estadoUltimo(this, idEvento )
 
-        val db = recogerRegistros(this, idEvento)
+        val db = registrosGroupByFecha(recogerFechasEvento(this, idEvento))
         recyclerView = findViewById(R.id.extra_materia_recycler)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
 
-        val extraLoaderAdapter = ExtraLoaderAdapter(db, object : ExtraLoaderAdapter.ExtraLoaderAdapterListener {
+        val extraLoaderAdapter = ExtraLoaderAdapter(db,evento, object : ExtraLoaderAdapter.ExtraLoaderAdapterListener {
             override fun cardOnClick(v: View, position: Int) {
                 doAsync {
                     if(position < 20) {
@@ -54,6 +56,32 @@ class ExtraLoaderActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = evento
+    }
+
+    private fun registrosGroupByFecha(registros:ArrayList<Registro>):ArrayList<Registro>{
+        val registrosU = ArrayList<Registro>()
+        var fechaTemp:String =""
+        registrosU.forEach {
+            val fechaTemp1 = formatfecha(it.fecha)
+            if(fechaTemp1 != fechaTemp) {
+                fechaTemp = fechaTemp1
+                registros.add(Registro(fecha = fechaTemp, enviado = it.enviado))
+            }
+        }
+
+        return registrosU
+    }
+
+    private fun formatfecha(fechaNoFormat:String, i:Boolean = true):String {
+        val trozosFecha = fechaNoFormat.split('/')
+        var fechaFormat:String
+
+        if(i)
+            fechaFormat = trozosFecha[2] + "-" + trozosFecha[1] + "-" + trozosFecha[0] + " " + trozosFecha[3]
+        else
+            fechaFormat = trozosFecha[2] + "-" + trozosFecha[1] + "-" + trozosFecha[0]
+
+        return fechaFormat
     }
 
     override fun onSupportNavigateUp(): Boolean {

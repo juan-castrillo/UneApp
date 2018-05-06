@@ -51,7 +51,7 @@ class MenuFragment : BottomSheetDialogFragment() {
     private lateinit var notasPress:LinearLayout
     //private lateinit var campusPress:LinearLayout
     private lateinit var horarioPress:LinearLayout
-    //private lateinit var settingsPress:LinearLayout
+    private lateinit var settingsPress:LinearLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_menu, container, false)
@@ -59,20 +59,29 @@ class MenuFragment : BottomSheetDialogFragment() {
         menuGoogleUserName = v.findViewById(R.id.menuGoogleUserName)
         menuGoogleUserEmail = v.findViewById(R.id.menuGoogleUserEmail)
         menuGoogleUserImage = v.findViewById(R.id.menuGoogleUserImage)
+
         asistenciaPress = v.findViewById(R.id.Asistencia)
         asistenciaPress.setOnClickListener{
             activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
             Launch(ExtraActivity::class, "Asistencias")
         }
+
         notasPress = v.findViewById(R.id.Notas)
         notasPress.setOnClickListener {
             activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
             Launch(NotasActivity::class, "Notas")
         }
+
         horarioPress = v.findViewById(R.id.Horario)
         horarioPress.setOnClickListener {
             activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
             Launch(RegistroAsistenciaActivity::class, "Asistencias2")
+        }
+
+        settingsPress = v.findViewById(R.id.Ajustes)
+        settingsPress.setOnClickListener {
+            activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
+            Launch(SettingsActivity::class, "Ajustes")
         }
         initMenu()
         return v

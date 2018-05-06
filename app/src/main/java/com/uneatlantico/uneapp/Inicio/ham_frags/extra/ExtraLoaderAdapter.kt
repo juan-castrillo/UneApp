@@ -15,10 +15,12 @@ import com.uneatlantico.uneapp.db.estructuras_db.Registro
 class ExtraLoaderAdapter : RecyclerView.Adapter<ExtraLoaderAdapter.RegViewHolder> {
     private val mlec: List<Registro>
     val onClickListener: ExtraLoaderAdapterListener
+    private val evento:String
 
-    constructor(mlec: List<Registro>, listener: ExtraLoaderAdapterListener) {
+    constructor(mlec: List<Registro>, evento:String, listener: ExtraLoaderAdapterListener) {
         this.mlec = mlec
         this.onClickListener = listener
+        this.evento = evento
     }
 
 
@@ -30,7 +32,7 @@ class ExtraLoaderAdapter : RecyclerView.Adapter<ExtraLoaderAdapter.RegViewHolder
     override fun onBindViewHolder(holder: RegViewHolder, position: Int) {
         if(position < 20) {
             holder.textViewFecha.text = mlec[position].fecha
-            holder.textViewEvento.text = mlec[position].Evento
+            holder.textViewEvento.text = evento
             if (mlec[position].enviado == 0)
                 holder.card.setCardBackgroundColor(Color.argb(150, 32, 151, 241))//holder.card.setCardBackgroundColor(getItemViewType(R.color.colorAccent))
             else

@@ -93,6 +93,8 @@
         android:layout_height="16dp"
         android:background="@drawable/shape_gradient_top_shadow"
         app:layout_anchor="@id/bottom_sheet" />
+
     <include layout= "@layout/qrcard_scan"/>
+
  </android.support.design.widget.CoordinatorLayout>
 
