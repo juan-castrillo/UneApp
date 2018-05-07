@@ -59,7 +59,7 @@ class UneAppExecuter{
                 val db = UneAppDB(ct).readableDatabase
                 lateinit var cursor: Cursor
                 try {
-                    cursor = db.rawQuery("select e.nombreEvento idEvento,r.fecha fecha,r.enviado enviado,r.estado estado from registros r, eventos e where r.idEvento = e._id ORDER BY fecha desc", null)
+                    cursor = db.rawQuery("select e.nombreEvento idEvento,r.fecha fecha,r.enviado enviado,r.estado estado from registros r, eventos e where r.idEvento = e._id ORDER BY _id desc", null)
                 } catch (e: Exception) {
                     Log.d("queryRecogerAll", e.message)
                 }
@@ -97,7 +97,7 @@ class UneAppExecuter{
             val db = UneAppDB(ct).readableDatabase
             lateinit var cursor: Cursor
             try {
-                val sql = "select fecha, enviado from registros where idEvento = '$idEvento' and estado = 0 ORDER BY fecha desc LIMIT 20"
+                val sql = "select fecha, enviado from registros where idEvento = '$idEvento' and estado = 0 ORDER BY _id desc LIMIT 20"
                 cursor = db.rawQuery(sql, null)
                 //Log.d("sqlExtraRegistro", sql)
             } catch (e: Exception) {
@@ -137,7 +137,7 @@ class UneAppExecuter{
             //Log.d("rutaDB", DB_PATH)
             val db = UneAppDB(ct).readableDatabase
             try {
-                val sql = "select fecha, enviado, estado from registros where idEvento = '$idEvento' and fecha LIKE '%$fecha%' ORDER BY fecha desc LIMIT 20"
+                val sql = "select fecha, enviado, estado from registros where idEvento = '$idEvento' and fecha LIKE '%$fecha%' ORDER BY _id desc"
                 val cursor = db.rawQuery(sql, null)
                 //Log.d("sqlExtraRegistro", sql)
 
