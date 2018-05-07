@@ -13,11 +13,11 @@ import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.estructuras_db.Registro
 
 class ExtraLoaderAdapter : RecyclerView.Adapter<ExtraLoaderAdapter.RegViewHolder> {
-    private val mlec: List<Registro>
+    private val mlec: ArrayList<Registro>
     val onClickListener: ExtraLoaderAdapterListener
     private val evento:String
 
-    constructor(mlec: List<Registro>, evento:String, listener: ExtraLoaderAdapterListener) {
+    constructor(mlec: ArrayList<Registro>, evento:String, listener: ExtraLoaderAdapterListener) {
         this.mlec = mlec
         this.onClickListener = listener
         this.evento = evento

@@ -90,14 +90,14 @@ class UneAppExecuter{
             return registros
         }
 
-        fun recogerFechasEvento(ct: Context, idEvento: Int):List<String>{
-            var fechas:List<String> = emptyList()
+        fun recogerFechasEvento(ct: Context, idEvento: Int):ArrayList<Registro>{
+            val registros = ArrayList<Registro>()
             //doAsync {
             //Log.d("rutaDB", DB_PATH)
             val db = UneAppDB(ct).readableDatabase
             lateinit var cursor: Cursor
             try {
-                val sql = "select fecha from registros where idEvento = '$idEvento' and estado = 0 ORDER BY fecha desc LIMIT 20"
+                val sql = "select fecha, enviado from registros where idEvento = '$idEvento' and estado = 0 ORDER BY fecha desc LIMIT 20"
                 cursor = db.rawQuery(sql, null)
                 //Log.d("sqlExtraRegistro", sql)
             } catch (e: Exception) {
@@ -105,20 +105,19 @@ class UneAppExecuter{
             }
             try {
                 //var id: Int
-                var Evento: String
+                //var Evento: String
                 var fecha: String
                 //var estado: Int
                 var enviado: Int
                 if (cursor.moveToFirst()) {
-                    var i = 0
                     while (!cursor.isAfterLast) {
                         //id = cursor.getInt(cursor.getColumnIndex("_id"))
                         //Evento = cursor.getString(cursor.getColumnIndex("nombreEvento"))
                         fecha = cursor.getString(cursor.getColumnIndex("fecha"))
                         //estado = cursor.getInt(cursor.getColumnIndex("estado"))
-                        //enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
+                        enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
 
-                        //fechas = fecha
+                        registros.add(Registro(fecha = fecha, enviado = enviado))
                         cursor.moveToNext()
                     }
                 }
@@ -129,7 +128,45 @@ class UneAppExecuter{
             db.close()
 
 
-            return fechas
+            return registros
+        }
+
+        fun recogerRegistrosEventoDia(idEvento:Int, ct: Context, fecha: String):ArrayList<Registro>{
+            val registros = ArrayList<Registro>()
+            //doAsync {
+            //Log.d("rutaDB", DB_PATH)
+            val db = UneAppDB(ct).readableDatabase
+            try {
+                val sql = "select fecha, enviado, estado from registros where idEvento = '$idEvento' and fecha LIKE '%$fecha%' ORDER BY fecha desc LIMIT 20"
+                val cursor = db.rawQuery(sql, null)
+                //Log.d("sqlExtraRegistro", sql)
+
+                //var id: Int
+                //var Evento: String
+                var fecha: String
+                var estado: Int
+                var enviado: Int
+                if (cursor.moveToFirst()) {
+                    while (!cursor.isAfterLast) {
+                        //id = cursor.getInt(cursor.getColumnIndex("_id"))
+                        //Evento = cursor.getString(cursor.getColumnIndex("nombreEvento"))
+                        fecha = cursor.getString(cursor.getColumnIndex("fecha"))
+                        estado = cursor.getInt(cursor.getColumnIndex("estado"))
+                        enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
+
+                        registros.add(Registro(fecha = fecha, enviado = enviado, estado = estado))
+                        cursor.moveToNext()
+                    }
+                }
+                cursor.close()
+            } catch (x: Exception) {
+                Log.d("asignacionRecogerAll", x.message)
+            }
+
+            db.close()
+
+
+            return registros
         }
 
         //TODO tomar solo los 20 primeros registros
