@@ -1,10 +1,8 @@
 package com.uneatlantico.uneapp.Inicio
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.Fragment
@@ -13,25 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.flipboard.bottomsheet.commons.BottomSheetFragment
 import com.squareup.picasso.Picasso
 
 import com.uneatlantico.uneapp.R
 import com.uneatlantico.uneapp.db.UneAppExecuter.Companion.devolverUsuario
-import org.w3c.dom.Text
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
-import android.view.MenuItem
 import android.widget.LinearLayout
-import com.uneatlantico.uneapp.Inicio.ham_frags.ExtraActivity
-import com.uneatlantico.uneapp.Inicio.ham_frags.NotasActivity
-import com.uneatlantico.uneapp.Inicio.ham_frags.RegistroAsistenciaActivity
-import com.uneatlantico.uneapp.Inicio.ham_frags.SettingsActivity
-import com.uneatlantico.uneapp.Inicio.ham_frags.extra.ExtraLoaderActivity
+import com.uneatlantico.uneapp.Inicio.ham_frags.*
 import kotlin.reflect.KClass
-import android.util.DisplayMetrics
-
-
 
 
 /**
@@ -52,6 +40,7 @@ class MenuFragment : BottomSheetDialogFragment() {
     //private lateinit var campusPress:LinearLayout
     private lateinit var horarioPress:LinearLayout
     private lateinit var settingsPress:LinearLayout
+    private lateinit var campusPress:LinearLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_menu, container, false)
@@ -75,7 +64,14 @@ class MenuFragment : BottomSheetDialogFragment() {
         horarioPress = v.findViewById(R.id.Horario)
         horarioPress.setOnClickListener {
             activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
-            Launch(RegistroAsistenciaActivity::class, "Asistencias2")
+            Launch(HorarioActivity::class, "Horario")
+        }
+
+        //TODO cambiar lanzar actividad a campus cuando este completa
+        campusPress = v.findViewById(R.id.Campus)
+        campusPress.setOnClickListener {
+            activity!!.supportFragmentManager.beginTransaction().remove(this).commit()
+            Launch(RegistroAsistenciaActivity::class, "Horario")
         }
 
         settingsPress = v.findViewById(R.id.Ajustes)
@@ -119,7 +115,7 @@ class MenuFragment : BottomSheetDialogFragment() {
 
         if (dialog != null) {
             val bottomSheet = dialog.findViewById<View>(R.id.design_bottom_sheet)
-            bottomSheet.layoutParams.height = convertDpToPixel(350F)
+            bottomSheet.layoutParams.height = convertDpToPixel(400F)
         }
         val view = view
         view!!.post {

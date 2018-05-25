@@ -56,34 +56,31 @@ class UneAppExecuter{
             val registros = ArrayList<Registro>()
             //doAsync {
                 //Log.d("rutaDB", DB_PATH)
-                val db = UneAppDB(ct).readableDatabase
-                lateinit var cursor: Cursor
-                try {
-                    cursor = db.rawQuery("select e.nombreEvento idEvento,r.fecha fecha,r.enviado enviado,r.estado estado from registros r, eventos e where r.idEvento = e._id ORDER BY _id desc", null)
-                } catch (e: Exception) {
-                    Log.d("queryRecogerAll", e.message)
-                }
-                try {
-                    //var id: Int
-                    var Evento: String
-                    var fecha: String
-                    //var estado: Int
-                    var enviado: Int
-                    if (cursor.moveToFirst())
-                        while (!cursor.isAfterLast) {
-                            //id = cursor.getInt(cursor.getColumnIndex("_id"))
-                            Evento = cursor.getString(cursor.getColumnIndex("idEvento"))
-                            fecha = cursor.getString(cursor.getColumnIndex("fecha"))
-                            //estado = cursor.getInt(cursor.getColumnIndex("estado"))
-                            enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
+            val db = UneAppDB(ct).readableDatabase
 
-                            registros.add(Registro(Evento = Evento, fecha = fecha, enviado = enviado))
-                            cursor.moveToNext()
-                        }
-                } catch (x: Exception) {
-                    Log.d("asignacionRecogerAll", x.message)
-                }
+            try {
+                val cursor = db.rawQuery("select e.nombreEvento idEvento,r.fecha fecha,r.enviado enviado,r.estado estado from registros r, eventos e where r.idEvento = e._id ORDER BY e._id desc", null)
+                //var id: Int
+                var Evento: String
+                var fecha: String
+                //var estado: Int
+                var enviado: Int
+                if (cursor.moveToFirst())
+                    while (!cursor.isAfterLast) {
+                        //id = cursor.getInt(cursor.getColumnIndex("_id"))
+                        Evento = cursor.getString(cursor.getColumnIndex("idEvento"))
+                        fecha = cursor.getString(cursor.getColumnIndex("fecha"))
+                        //estado = cursor.getInt(cursor.getColumnIndex("estado"))
+                        enviado = cursor.getInt(cursor.getColumnIndex("enviado"))
+
+                        registros.add(Registro(Evento = Evento, fecha = fecha, enviado = enviado))
+                        cursor.moveToNext()
+                    }
                 cursor.close()
+            } catch (x: Exception) {
+                Log.d("asignacionRecogerAll", x.message)
+            }
+
             db.close()
 
             //}
@@ -95,15 +92,9 @@ class UneAppExecuter{
             //doAsync {
             //Log.d("rutaDB", DB_PATH)
             val db = UneAppDB(ct).readableDatabase
-            lateinit var cursor: Cursor
             try {
                 val sql = "select fecha, enviado from registros where idEvento = '$idEvento' and estado = 0 ORDER BY _id desc LIMIT 20"
-                cursor = db.rawQuery(sql, null)
-                //Log.d("sqlExtraRegistro", sql)
-            } catch (e: Exception) {
-                Log.d("queryRecogerAll", e.message)
-            }
-            try {
+                val cursor = db.rawQuery(sql, null)
                 //var id: Int
                 //var Evento: String
                 var fecha: String
@@ -121,10 +112,11 @@ class UneAppExecuter{
                         cursor.moveToNext()
                     }
                 }
+                cursor.close()
             } catch (x: Exception) {
                 Log.d("asignacionRecogerAll", x.message)
             }
-            cursor.close()
+
             db.close()
 
 

@@ -73,6 +73,8 @@
         <activity
             android:name=".WebViewActivity"
             android:theme="@style/ham_Theme" />
+        <activity android:name=".Inicio.ham_frags.HorarioActivity"
+            android:theme="@style/ham_Theme"/>
         <activity
             android:name=".Inicio.ham_frags.extra.ExtraLoaderActivity"
             android:theme="@style/ham_Theme" />

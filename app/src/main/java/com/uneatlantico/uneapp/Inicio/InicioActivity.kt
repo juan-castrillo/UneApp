@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.NonNull
-import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.ActivityCompat
@@ -18,6 +17,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.View
 import com.uneatlantico.uneapp.Inicio.navbar_frags.CampusFragment
 import com.uneatlantico.uneapp.Inicio.navbar_frags.HorarioFragment
@@ -43,14 +43,9 @@ class InicioActivity : AppCompatActivity() {
     //Menu lateral de hamburguesa
     //private lateinit var googleAccount: GoogleSignInAccount
     //private lateinit var googleAccount: List<String>
-    private lateinit var mName: TextView
-    private lateinit var mImage: ImageView
-    private lateinit var mMail: TextView
-    private lateinit var headerView: View
 
+    private lateinit var menuImageView: FrameLayout
 
-
-    private lateinit var menuImageView: ImageView
     private lateinit var qrSlideScanner: DecoratedBarcodeView
     private val s: CameraSettings = CameraSettings()
     private var lastText: String? = null
@@ -80,7 +75,7 @@ class InicioActivity : AppCompatActivity() {
         //googleAccount = intent.extras.getParcelable("account")
         //googleAccount = devolverUsuario(this)
 
-        openFragment(QrScannerFragment.newInstance())
+        openFragment(InicioFragment.newInstance())
 
         /*val dialog = TopSheetDialog(this)
 dialog.setContentView(R.layout.fragment_menu)
@@ -131,7 +126,7 @@ TopSheetBehavior.from(sheet).setState(TopSheetBehavior.STATE_EXPANDED);*/
             }
         })
 
-        bottomSheetFragment = MenuFragment()
+        bottomSheetFragment = menuFragment
         //bottomSheetFragment.show(fm, bottomSheetFragment.tag)
 
 
@@ -157,6 +152,7 @@ TopSheetBehavior.from(sheet).setState(TopSheetBehavior.STATE_EXPANDED);*/
             //notifications.showNotification("hola", "hola")
 
             //notification("hola", "hola")
+            Log.d("pulsastepelotudo", "k")
             bottomSheetFragment.show(fm, bottomSheetFragment.tag)
         }
         CameraInstance(this).close()

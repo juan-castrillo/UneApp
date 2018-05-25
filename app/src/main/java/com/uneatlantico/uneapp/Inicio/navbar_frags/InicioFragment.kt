@@ -56,7 +56,7 @@ class InicioFragment : Fragment() {
         }, this.context!!)
 
         recyclerView.adapter = inicioAdapter
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(this.context)
         recyclerView.layoutManager = layoutManager
 
         val swipeHandler = object : InicioSwipeDeleteCallback() {

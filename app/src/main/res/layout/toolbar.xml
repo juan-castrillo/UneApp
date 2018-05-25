@@ -23,19 +23,23 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="-200dp"
         >
-
-        <ImageView
+        <FrameLayout
+            android:layout_width="65dp"
             android:id="@+id/menuImage"
-            android:layout_width="32dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:clickable="true"
-            android:layout_marginLeft="16dp"
             android:focusable="true"
-            android:src="@drawable/ic_menu_black_48dp"
+            android:clickable="true"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
 
-            />
+                android:layout_marginLeft="16dp"
 
+                android:src="@drawable/ic_menu_black_48dp"
+
+                />
+        </FrameLayout>
         <TextView
 
             android:layout_width="wrap_content"

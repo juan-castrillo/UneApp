@@ -19,7 +19,7 @@ abstract class InicioSwipeDeleteCallback() : ItemTouchHelper.SimpleCallback(1, I
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
 
-    override fun getMovementFlags(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
+    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         /**
          * To disable "swipe" for specific item return 0 here.
          * For example:
@@ -30,13 +30,11 @@ abstract class InicioSwipeDeleteCallback() : ItemTouchHelper.SimpleCallback(1, I
         return super.getMovementFlags(recyclerView, viewHolder)
     }
 
-    override fun onMove(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?, target: RecyclerView.ViewHolder?): Boolean {
+    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         return false
     }
 
-    override fun onChildDraw(
-            c: Canvas?, recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder,
-            dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+    override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
 
         /*val itemView = viewHolder.itemView
         val itemHeight = itemView.bottom - itemView.top*/

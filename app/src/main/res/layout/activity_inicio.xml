@@ -7,78 +7,33 @@
     tools:context="com.uneatlantico.uneapp.Inicio.InicioActivity"
     >
 
-
-
-        <!--Contenedor menu superior-->
-
-
-        <!--Contenidos actividad Inicio-->
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <android.support.design.widget.AppBarLayout
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary">
+            <!-- The ActionBar displayed at the top -->
+            <include
+                layout="@layout/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary">
-                <!-- The ActionBar displayed at the top -->
-                <include
-                    layout="@layout/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    />
-            <!--<android.support.v7.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|enterAlways|snap"/>-->
+                android:layout_height="56dp" />
+
         </android.support.design.widget.AppBarLayout>
-    <!-- The main content view where fragments are loaded -->
-            <!--where fragments go-->
-            <FrameLayout
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:background="@android:color/white"
-                />
 
-            <android.support.design.widget.BottomNavigationView
-                android:id="@+id/navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:itemBackground = "@color/colorPrimary"
-                app:menu="@menu/navigation"
-                />
-        </LinearLayout>
-
-        <!--<RelativeLayout
-            android:id="@+id/fullmenu"
+        <!--where fragments go-->
+        <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
-            <LinearLayout
-                android:id="@+id/greycontainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/negro"
-                android:alpha="0"
-                android:orientation="vertical"/>
-            <FrameLayout
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                android:id="@+id/containeador"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:background="@color/zxing_transparent"/>
-            <FrameLayout
-                android:id="@+id/dissmiss_menu"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/containeador"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:background="@android:color/white"
+            />
 
-        </RelativeLayout>-->
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/greycontainer"

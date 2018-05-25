@@ -11,10 +11,11 @@ buildscript {
         google()
         jcenter()
 
+
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha14'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.android.gms:play-services-identity:$services_version"
         classpath 'com.google.gms:google-services:3.2.0'
@@ -29,7 +30,8 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url 'https://jitpack.io' }
+        maven { url 'https://jitpack.io'
+        }
     }
 }
 
